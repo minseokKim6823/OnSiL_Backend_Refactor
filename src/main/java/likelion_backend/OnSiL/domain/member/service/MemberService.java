@@ -32,7 +32,7 @@ public class MemberService {
 
     @Transactional
     public ResponseEntity<Boolean> signUp(SignUpDto memberDto) {
-        if (memberJpaRepository.findByMemberId(memberDto.getMemberId()).orElse(null) != null) {
+        if (memberJpaRepository.findByMemberId(memberDto.memberId()).orElse(null) != null) {
             throw new RuntimeException("이미 가입되어 있는 유저입니다.");
         }
         Authority authority = authorityJpaRepository.findByAuthority("ROLE_USER")
@@ -42,12 +42,12 @@ public class MemberService {
 
 
         Member member = Member.builder()
-                .memberId(memberDto.getMemberId())
-                .name(memberDto.getName())
-                .password(passwordEncoder.encode(memberDto.getPassword()))
-                .nickname(memberDto.getNickname())
+                .memberId(memberDto.memberId())
+                .name(memberDto.name())
+                .password(passwordEncoder.encode(memberDto.password()))
+                .nickname(memberDto.nickname())
                 .authority(authority)
-                .status(memberDto.getStatus())
+                .status(memberDto.status())
                 .activate(true)
                 .build();
 

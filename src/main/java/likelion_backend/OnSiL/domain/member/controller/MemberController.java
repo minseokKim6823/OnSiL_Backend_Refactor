@@ -2,13 +2,17 @@ package likelion_backend.OnSiL.domain.member.controller;
 
 
 import jakarta.validation.Valid;
+import likelion_backend.OnSiL.domain.member.dto.EmailCheckDto;
+import likelion_backend.OnSiL.domain.member.dto.EmailRequestDto;
 import likelion_backend.OnSiL.domain.member.dto.LoginDto;
 import likelion_backend.OnSiL.domain.member.dto.SignUpDto;
 import likelion_backend.OnSiL.domain.member.entity.Member;
 import likelion_backend.OnSiL.domain.member.repository.MemberJpaRepository;
+import likelion_backend.OnSiL.domain.member.service.MailSendService;
 import likelion_backend.OnSiL.domain.member.service.MemberService;
 import likelion_backend.OnSiL.global.jwt.dto.TokenDto;
 import likelion_backend.OnSiL.global.jwt.service.TokenService;
+import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -29,12 +33,31 @@ public class MemberController {
     private final MemberService memberService;
     private final MemberJpaRepository memberJpaRepository;
     private final TokenService tokenService;
+    private final MailSendService mailService;
 
-    @Autowired
-    public MemberController(MemberService memberService, MemberJpaRepository memberJpaRepository, TokenService tokenService) {
+    private static boolean emailauth=false;
+    public MemberController(MemberService memberService, MemberJpaRepository memberJpaRepository, TokenService tokenService, MailSendService mailService) {
         this.memberService = memberService;
         this.memberJpaRepository = memberJpaRepository;
         this.tokenService = tokenService;
+        this.mailService = mailService;
+    }
+    @PostMapping("/mailSend")
+    public String mailSend(@RequestBody @Valid EmailRequestDto emailDto) {
+        System.out.println("이메일 인증 요청이 들어옴");
+        System.out.println("이메일 인증 이메일 :" + emailDto.getEmail());
+        return mailService.joinEmail(emailDto.getEmail());
+    }
+
+    @PostMapping("/mailauthCheck")
+    public String AuthCheck(@RequestBody @Valid EmailCheckDto emailCheckDto) {
+        Boolean Checked = mailService.CheckAuthNum(emailCheckDto.getEmail(), emailCheckDto.getAuthNum());
+        if (Checked) {
+            emailauth=true;
+            return "ok";
+        } else {
+            throw new NullPointerException("뭔가 잘못!");
+        }
     }
 
     @PostMapping("/sign-up")
@@ -42,6 +65,10 @@ public class MemberController {
         if (bindingResult.hasErrors()) {
             log.info("아이디 혹은 비밀번호를 잘못입력했습니다.");
 
+            return ResponseEntity.ok(false);
+        }
+        if (emailauth==false){
+            log.info("이메일 인증을 완료해 주세요");
             return ResponseEntity.ok(false);
         }
         return memberService.signUp(signUpDto);

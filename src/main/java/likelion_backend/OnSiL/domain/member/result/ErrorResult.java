@@ -1,4 +1,4 @@
-package likelion_backend.OnSiL.domain.member.resutl;
+package likelion_backend.OnSiL.domain.member.result;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;

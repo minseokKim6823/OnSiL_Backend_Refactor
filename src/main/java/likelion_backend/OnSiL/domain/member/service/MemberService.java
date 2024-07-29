@@ -4,6 +4,7 @@ package likelion_backend.OnSiL.domain.member.service;
 import com.amazonaws.services.s3.AmazonS3;
 import com.amazonaws.services.s3.model.ObjectMetadata;
 import likelion_backend.OnSiL.domain.member.controller.S3FileUploadController;
+import likelion_backend.OnSiL.domain.member.dto.MemberUpdateDto;
 import likelion_backend.OnSiL.domain.member.dto.SignUpDto;
 import likelion_backend.OnSiL.domain.member.entity.Member;
 import likelion_backend.OnSiL.domain.member.repository.AuthorityJpaRepository;
@@ -94,5 +95,26 @@ public class MemberService {
 
     public Optional<Member> findByMemberId(String memberId) {
         return memberJpaRepository.findByMemberId(memberId);
+    }
+    @Transactional
+    public ResponseEntity<Boolean> updateMember(Long memberId, MemberUpdateDto memberUpdateDto) {
+        Optional<Member> optionalMember = memberJpaRepository.findById(memberId);
+
+        if (optionalMember.isEmpty()) {
+            throw new RuntimeException("Member not found");
+        }
+
+        Member member = optionalMember.get();
+
+        // Update fields
+        member.setName(memberUpdateDto.getName() != null ? memberUpdateDto.getName() : member.getName());
+        member.setNickname(memberUpdateDto.getNickname() != null ? memberUpdateDto.getNickname() : member.getNickname());
+        member.setProfile_pic(memberUpdateDto.getProfilePic() != null ? memberUpdateDto.getProfilePic() : member.getProfile_pic());
+        member.setHealth_con(memberUpdateDto.getHealthCon() != null ? memberUpdateDto.getHealthCon() : member.getHealth_con());
+        member.setText_size(memberUpdateDto.getTextSize() != 0 ? memberUpdateDto.getTextSize() : member.getText_size());
+        member.setActivate(memberUpdateDto.getActivate() != null ? memberUpdateDto.getActivate() : member.getActivate());
+
+        memberJpaRepository.save(member);
+        return ResponseEntity.ok(true);
     }
 }

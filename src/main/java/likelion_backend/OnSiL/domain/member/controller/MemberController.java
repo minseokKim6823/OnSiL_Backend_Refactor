@@ -64,13 +64,13 @@ public class MemberController {
     public ResponseEntity<Boolean> signUp(@Valid @RequestBody SignUpDto signUpDto, BindingResult bindingResult) {
         if (bindingResult.hasErrors()) {
             log.info("아이디 혹은 비밀번호를 잘못입력했습니다.");
-
             return ResponseEntity.ok(false);
         }
         if (emailauth==false){
             log.info("이메일 인증을 완료해 주세요");
             return ResponseEntity.ok(false);
         }
+        emailauth=false;
         return memberService.signUp(signUpDto);
     }   // 회원가입
 

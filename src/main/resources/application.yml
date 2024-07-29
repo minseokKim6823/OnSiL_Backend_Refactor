@@ -24,6 +24,16 @@ jwt:
   secret: c2lsdmVybmluZS10ZWNoLXNwcmluZy1ib290LWp3dC10dXRvcmlhbC1zZWNyZXQtc2lsdmVybmluZS10ZWNoLXNwcmluZy1ib290LWp3dC10dXRvcmlhbC1zZWNyZXWW
   token-validity-in-seconds: 86400
 
+cloud:
+  aws:
+    s3:
+      bucket: centralhackthon
+    region:
+      static: ap-northeast-2
+    credentials:
+      access-key: AKIAZBAE57CCKVNK2RPP
+      secret-key: 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
+
 server:
   address: 127.0.0.1
   port: 8080

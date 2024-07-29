@@ -2,10 +2,7 @@ package likelion_backend.OnSiL.domain.member.controller;
 
 
 import jakarta.validation.Valid;
-import likelion_backend.OnSiL.domain.member.dto.EmailCheckDto;
-import likelion_backend.OnSiL.domain.member.dto.EmailRequestDto;
-import likelion_backend.OnSiL.domain.member.dto.LoginDto;
-import likelion_backend.OnSiL.domain.member.dto.SignUpDto;
+import likelion_backend.OnSiL.domain.member.dto.*;
 import likelion_backend.OnSiL.domain.member.entity.Member;
 import likelion_backend.OnSiL.domain.member.repository.MemberJpaRepository;
 import likelion_backend.OnSiL.domain.member.service.MailSendService;
@@ -25,23 +22,29 @@ import java.util.HashMap;
 import java.util.Optional;
 
 
+
+
+    // Other methods...
+
 @Slf4j
 @RestController
+@RequiredArgsConstructor
 @CrossOrigin(origins = "*", allowedHeaders = "*")
 @RequestMapping("/api")
 public class MemberController {
+
     private final MemberService memberService;
     private final MemberJpaRepository memberJpaRepository;
     private final TokenService tokenService;
     private final MailSendService mailService;
 
     private static boolean emailauth=false;
-    public MemberController(MemberService memberService, MemberJpaRepository memberJpaRepository, TokenService tokenService, MailSendService mailService) {
-        this.memberService = memberService;
-        this.memberJpaRepository = memberJpaRepository;
-        this.tokenService = tokenService;
-        this.mailService = mailService;
-    }
+//    public MemberController(MemberService memberService, MemberJpaRepository memberJpaRepository, TokenService tokenService, MailSendService mailService) {
+//        this.memberService = memberService;
+//        this.memberJpaRepository = memberJpaRepository;
+//        this.tokenService = tokenService;
+//        this.mailService = mailService;
+//    }
     @PostMapping("/mailSend")
     public String mailSend(@RequestBody @Valid EmailRequestDto emailDto) {
         System.out.println("이메일 인증 요청이 들어옴");
@@ -96,4 +99,10 @@ public class MemberController {
             return ResponseEntity.ok(false);
         }
     }   // 회원 아이디 중복 검사
+
+        @PutMapping("/members/{memberId}")
+        public ResponseEntity<Boolean> updateMember(@PathVariable Long memberId, @RequestBody MemberUpdateDto memberUpdateDto) {
+            return memberService.updateMember(memberId, memberUpdateDto);
+    }
 }
+

@@ -1,0 +1,32 @@
+package likelion_backend.OnSiL.domain.board.dto;
+
+import likelion_backend.OnSiL.domain.board.entity.Board;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+
+@Getter
+@Builder
+@NoArgsConstructor
+@AllArgsConstructor
+public class BoardResponseDTO {
+    private int postId;
+    private String title;
+    private String content;
+    private Board.Category category;
+    private int recommend;
+    private String image;
+
+    // 엔티티에서 DTO로 변환하는 정적 메소드
+    public static BoardResponseDTO fromEntity(Board board) {
+        return BoardResponseDTO.builder()
+                .postId(board.getPost_id())
+                .title(board.getTitle())
+                .content(board.getContent())
+                .category(board.getCategory())
+                .recommend(board.getRecommend())
+                .image(board.getImage())
+                .build();
+    }
+}

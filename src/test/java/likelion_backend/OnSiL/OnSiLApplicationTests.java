@@ -1,8 +1,11 @@
 package likelion_backend.OnSiL;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import jakarta.persistence.EntityNotFoundException;
+import likelion_backend.OnSiL.domain.board.controller.BoardController;
 import likelion_backend.OnSiL.domain.board.dto.BoardRequestDTO;
+import likelion_backend.OnSiL.domain.board.dto.BoardResponseDTO;
 import likelion_backend.OnSiL.domain.board.entity.Board;
 import likelion_backend.OnSiL.domain.board.repository.BoardRepository;
 import likelion_backend.OnSiL.domain.board.service.BoardService;
@@ -13,6 +16,7 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
+import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContext;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -34,6 +38,9 @@ class OnSiLApplicationTests {
 
 	@Autowired
 	private BoardService boardService;
+
+	@Autowired
+	private BoardController boardController;
 
 	@BeforeEach
 	void setUp() {
@@ -146,7 +153,39 @@ class OnSiLApplicationTests {
 		);
 
 	}
+	@Test
+	@Transactional
+	void testSearchAllBoards() throws JsonProcessingException {
+		// Test case when title is not provided (should return all boards)
+		ResponseEntity<List<BoardResponseDTO>> response = boardController.search(null);
 
+		List<BoardResponseDTO> boardList = response.getBody();
+
+		// Print the results
+		System.out.println("All Boards:");
+		assert boardList != null;
+		boardList.forEach(board ->
+				System.out.println("Board ID: " + board.getPostId() + ", Title: " + board.getTitle() + ", Content: " + board.getContent())
+		);
+
+	}
+	@Test
+	@Transactional
+	void testSearchBoardByTitle() throws JsonProcessingException {
+		// Test case when a specific title is provided
+		String title = "Test Title";
+		ResponseEntity<List<BoardResponseDTO>> response = boardController.search(title);
+
+		List<BoardResponseDTO> boardList = response.getBody();
+
+		// Print the results
+		System.out.println("Boards with Title: " + title);
+		assert boardList != null;
+		boardList.forEach(board ->
+				System.out.println("Board ID: " + board.getPostId() + ", Title: " + board.getTitle() + ", Content: " + board.getContent())
+		);
+
+	}
 
 	@Test
 	@Commit

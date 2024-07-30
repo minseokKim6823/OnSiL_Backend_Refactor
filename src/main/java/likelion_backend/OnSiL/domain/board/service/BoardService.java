@@ -4,6 +4,7 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import jakarta.persistence.EntityNotFoundException;
 import likelion_backend.OnSiL.domain.board.dto.BoardRequestDTO;
+import likelion_backend.OnSiL.domain.board.dto.BoardResponseDTO;
 import likelion_backend.OnSiL.domain.board.entity.Board;
 import likelion_backend.OnSiL.domain.board.repository.BoardRepository;
 import lombok.RequiredArgsConstructor;
@@ -14,6 +15,9 @@ import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+
+import java.util.ArrayList;
+import java.util.List;
 
 @Slf4j
 @Service
@@ -41,7 +45,7 @@ public class BoardService {
             log.info("게시물 저장 성공: {}", board);
         } catch (Exception e) {
             log.error("게시물 저장 실패", e);
-            throw new RuntimeException("게시물 저장 중 오류가 발생했습니다.", e);
+            throw new RuntimeException("게시물 저장 중 오류가 발생", e);
         }
     }
 
@@ -59,6 +63,15 @@ public class BoardService {
         existingBoard.setImage(updatedBoardDto.getImage());
 
         boardRepository.save(existingBoard);
+    }
+    @Transactional
+    public List<BoardResponseDTO> search(String title) throws JsonProcessingException {
+        List<Board> boardEntities = boardRepository.findWithParams(title);
+        List<BoardResponseDTO> boardResponseDtoList = new ArrayList<>();
+        for (Board board : boardEntities) {
+            boardResponseDtoList.add(BoardResponseDTO.fromEntity(board));
+        }
+        return boardResponseDtoList;
     }
     public Page<Board> boardrecommendList(Pageable pageable) {
         return boardRepository.findByBoardRecommendPost(pageable);

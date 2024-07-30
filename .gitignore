@@ -33,5 +33,10 @@ out/
 /nbdist/
 /.nb-gradle/
 
+# Ignore YAML and properties files
+*.yml
+*.properties
+
+
 ### VS Code ###
 .vscode/

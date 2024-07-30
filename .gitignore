@@ -36,7 +36,6 @@ out/
 # Ignore YAML and properties files
 *.yml
 *.properties
-.gitignore
 
 ### VS Code ###
 .vscode/

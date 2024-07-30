@@ -36,6 +36,6 @@ out/
 # Ignore YAML and properties files
 *.yml
 *.properties
-
+src/main/resources/application.yml
 ### VS Code ###
 .vscode/

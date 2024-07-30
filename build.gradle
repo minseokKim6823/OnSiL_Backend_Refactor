@@ -1,10 +1,18 @@
 plugins {
 	id 'java'
+<<<<<<< HEAD
 	id 'org.springframework.boot' version '3.2.8'
 	id 'io.spring.dependency-management' version '1.1.6'
 }
 
 group = 'likelion_backend'
+=======
+	id 'org.springframework.boot' version '3.3.2'
+	id 'io.spring.dependency-management' version '1.1.6'
+}
+
+group = 'com.example'
+>>>>>>> dev/junsang
 version = '0.0.1-SNAPSHOT'
 
 java {
@@ -13,17 +21,21 @@ java {
 	}
 }
 
+<<<<<<< HEAD
 configurations {
 	compileOnly {
 		extendsFrom annotationProcessor
 	}
 }
 
+=======
+>>>>>>> dev/junsang
 repositories {
 	mavenCentral()
 }
 
 dependencies {
+<<<<<<< HEAD
 	// mariadb 세팅
 	implementation 'org.mariadb.jdbc:mariadb-java-client:2.7.4'
 	runtimeOnly 'org.mariadb.jdbc:mariadb-java-client'
@@ -54,6 +66,14 @@ dependencies {
 	implementation group: 'org.springframework.boot', name: 'spring-boot-starter-mail', version: '2.6.3'
 	// Spring Context Support
 	implementation 'org.springframework:spring-context-support:5.3.9'
+=======
+	implementation 'org.springframework.boot:spring-boot-starter-data-jpa'
+	implementation 'org.springframework.boot:spring-boot-starter-web'
+	runtimeOnly 'com.mysql:mysql-connector-j'
+	runtimeOnly 'org.mariadb.jdbc:mariadb-java-client'
+	testImplementation 'org.springframework.boot:spring-boot-starter-test'
+	testRuntimeOnly 'org.junit.platform:junit-platform-launcher'
+>>>>>>> dev/junsang
 }
 
 tasks.named('test') {

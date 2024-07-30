@@ -19,16 +19,16 @@ public class LikeService {
     }
 
     // Read
-    public List<Like> getLikesByCommunityId(Long communityId) {
-        return likeRepository.findByCommunityId(communityId);
-    }
-
     public List<Like> getLikesByUserId(Long userId) {
         return likeRepository.findByUserId(userId);
     }
 
+    public List<Like> getLikesByPostId(Long postId) {
+        return likeRepository.findByPostId(postId);
+    }
+
     // Delete
-    public void deleteLike(Long communityId, Long userId) {
-        likeRepository.deleteByCommunityIdAndUserId(communityId, userId);
+    public void deleteLike(Long userId, Long postId) {
+        likeRepository.deleteByUserIdAndPostId(userId, postId);
     }
 }

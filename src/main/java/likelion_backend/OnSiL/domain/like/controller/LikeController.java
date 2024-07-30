@@ -22,20 +22,20 @@ public class LikeController {
     }
 
     // Read
-    @GetMapping("/community/{communityId}")
-    public List<Like> getLikesByCommunityId(@PathVariable Long communityId) {
-        return likeService.getLikesByCommunityId(communityId);
-    }
-
     @GetMapping("/user/{userId}")
     public List<Like> getLikesByUserId(@PathVariable Long userId) {
         return likeService.getLikesByUserId(userId);
     }
 
+    @GetMapping("/post/{postId}")
+    public List<Like> getLikesByPostId(@PathVariable Long postId) {
+        return likeService.getLikesByPostId(postId);
+    }
+
     // Delete
     @DeleteMapping
-    public ResponseEntity<Void> deleteLike(@RequestParam Long communityId, @RequestParam Long userId) {
-        likeService.deleteLike(communityId, userId);
+    public ResponseEntity<Void> deleteLike(@RequestParam Long userId, @RequestParam Long postId) {
+        likeService.deleteLike(userId, postId);
         return ResponseEntity.noContent().build();
     }
 }

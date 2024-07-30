@@ -6,7 +6,7 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import java.util.List;
 
 public interface LikeRepository extends JpaRepository<Like, Long> {
-    List<Like> findByCommunityId(Long communityId);
     List<Like> findByUserId(Long userId);
-    void deleteByCommunityIdAndUserId(Long communityId, Long userId);
+    List<Like> findByPostId(Long postId);
+    void deleteByUserIdAndPostId(Long userId, Long postId);
 }

@@ -15,16 +15,15 @@ public class CorsConfig implements WebMvcConfigurer {
         registry.addMapping("/**")
                 .allowedMethods("*")
                 .allowedOrigins("http://localhost:3000")
-                .allowedOrigins("https://smucapstonedesign.netlify.app")
-                .allowedOrigins("http://localhost:8081");
+                .allowedOrigins("http://localhost:8080");
     }
 
     @Bean
     public CorsFilter corsFilter() {
         CorsConfiguration corsConfiguration = new CorsConfiguration();
         corsConfiguration.addAllowedOrigin("http://localhost:3000"); // 도메인
-        corsConfiguration.addAllowedOrigin("http://localhost:8081");
-        corsConfiguration.addAllowedOrigin("https://smucapstonedesign.netlify.app"); // 추가된 도메인
+        corsConfiguration.addAllowedOrigin("http://localhost:8080");
+
         corsConfiguration.addAllowedMethod("*"); // 메서드
         corsConfiguration.addAllowedHeader("*"); // 헤더
         corsConfiguration.setAllowCredentials(true);

@@ -3,7 +3,7 @@ package likelion_backend.OnSiL.domain.member.service;
 
 import com.amazonaws.services.s3.AmazonS3;
 import com.amazonaws.services.s3.model.ObjectMetadata;
-import likelion_backend.OnSiL.domain.member.controller.S3FileUploadController;
+
 import likelion_backend.OnSiL.domain.member.dto.MemberUpdateDto;
 import likelion_backend.OnSiL.domain.member.dto.SignUpDto;
 import likelion_backend.OnSiL.domain.member.entity.Member;
@@ -38,7 +38,7 @@ public class MemberService {
     private final MemberJpaRepository memberJpaRepository;//멤버 저장소
     private final PasswordEncoder passwordEncoder;
     private final AuthorityJpaRepository authorityJpaRepository;
-    private final S3FileUploadController s3FileUploadController;
+//    private final S3FileUploadController s3FileUploadController;
     @Service
     @RequiredArgsConstructor
     public class S3FileUploadService {
@@ -80,7 +80,7 @@ public class MemberService {
                 .nickname(memberDto.nickname())
                 .authority(authority)
                 .status(memberDto.status())
-                .profile_pic(s3FileUploadController.getName())
+//                .profile_pic(s3FileUploadController.getName())
                 .activate(true)
 
                 .build();

@@ -15,6 +15,7 @@ public class BoardRequestDTO {
     private String content;
     private Board.Category category;
     private String image;
+    private String writer;
 
 
     public Board toEntity() {
@@ -23,6 +24,7 @@ public class BoardRequestDTO {
         board.setContent(this.content);
         board.setCategory(this.category);
         board.setImage(this.image);
+        board.setWriter(this.writer);
         return board;
     }
 }

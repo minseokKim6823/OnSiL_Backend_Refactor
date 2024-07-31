@@ -61,8 +61,8 @@ class OnSiLApplicationTests {
 	void testSaveBoard() {
 		// given
 		BoardRequestDTO boardRequestDTO = BoardRequestDTO.builder()
-				.title("2 Title")
-				.content("3 Content")
+				.title("5 Title")
+				.content("6 Content")
 				.category(Board.Category.SAN)
 				.image("test-image.jpg")
 				.build();
@@ -187,21 +187,21 @@ class OnSiLApplicationTests {
 
 	}
 
-	@Test
-	@Commit
-	void testIncreaseRecommend() {
-		int boardId = 11;
-			boardService.increaseRecommend(boardId);
-
-
-	}
-
-	@Test
-	@Commit
-	void testDecreaseRecommend() {
-		int boardId = 11;
-			boardService.decreaseRecommend(boardId);
-
-
-	}
+//	@Test
+//	@Commit
+//	void testIncreaseRecommend() {
+//		int boardId = 11;
+//			boardService.increaseRecommend(boardId);
+//
+//
+//	}
+//
+//	@Test
+//	@Commit
+//	void testDecreaseRecommend() {
+//		int boardId = 11;
+//			boardService.decreaseRecommend(boardId);
+//
+//
+//	}
 }

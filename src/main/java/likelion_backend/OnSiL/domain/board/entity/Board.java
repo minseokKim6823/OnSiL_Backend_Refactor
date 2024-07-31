@@ -20,6 +20,7 @@ public class Board {
 
     private int recommend;
     private String image;
+    private String writer;
 
     public enum Category {
         SAN, JIL, CHIN

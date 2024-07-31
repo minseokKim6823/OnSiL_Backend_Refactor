@@ -17,6 +17,7 @@ public class BoardResponseDTO {
     private Board.Category category;
     private int recommend;
     private String image;
+    private String writer;
 
     // 엔티티에서 DTO로 변환하는 정적 메소드
     public static BoardResponseDTO fromEntity(Board board) {
@@ -26,6 +27,7 @@ public class BoardResponseDTO {
                 .content(board.getContent())
                 .category(board.getCategory())
                 .recommend(board.getRecommend())
+                .writer(board.getWriter())
                 .image(board.getImage())
                 .build();
     }

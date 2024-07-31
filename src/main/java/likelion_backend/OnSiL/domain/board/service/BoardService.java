@@ -6,7 +6,9 @@ import jakarta.persistence.EntityNotFoundException;
 import likelion_backend.OnSiL.domain.board.dto.BoardRequestDTO;
 import likelion_backend.OnSiL.domain.board.dto.BoardResponseDTO;
 import likelion_backend.OnSiL.domain.board.entity.Board;
+import likelion_backend.OnSiL.domain.board.entity.Recommendation;
 import likelion_backend.OnSiL.domain.board.repository.BoardRepository;
+import likelion_backend.OnSiL.domain.board.repository.UserRecommendationBoardRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
@@ -25,6 +27,7 @@ import java.util.List;
 public class BoardService {
 
     private final BoardRepository boardRepository;
+    private final UserRecommendationBoardRepository userRecommendationBoardRepository;
 
     @Transactional
     public void save(BoardRequestDTO boardDTO) {
@@ -36,6 +39,7 @@ public class BoardService {
             String currentUserEmail = authentication.getName();
             log.info("현재 사용자의 이메일: {}", currentUserEmail);
             Board board = new Board();
+            board.setWriter(currentUserEmail);
             board.setTitle(boardDTO.getTitle());
             board.setContent(boardDTO.getContent());
             board.setImage(boardDTO.getImage());
@@ -77,7 +81,7 @@ public class BoardService {
         return boardRepository.findByBoardRecommendPost(pageable);
     }
 
-    @Transactional
+    /*@Transactional
     public void increaseRecommend(int boardId) {
         Board board = boardRepository.findById(boardId)
                 .orElseThrow(() -> new EntityNotFoundException("해당 ID의 게시물을 찾을 수 없습니다."));
@@ -91,6 +95,34 @@ public class BoardService {
                 .orElseThrow(() -> new EntityNotFoundException("해당 ID의 게시물을 찾을 수 없습니다."));
         board.setRecommend(board.getRecommend() - 1);
         boardRepository.save(board);
+    } */
+    @Transactional
+    public void increaseRecommend(int boardId, String userEmail) {
+        Board board = boardRepository.findById(boardId)
+                .orElseThrow(() -> new EntityNotFoundException("해당 ID의 게시물을 찾을 수 없습니다."));
+        board.setRecommend(board.getRecommend() + 1);
+        boardRepository.save(board);
+
+        Recommendation userRecommendation = new Recommendation();
+        userRecommendation.setUserId(userEmail);
+        userRecommendation.setBoardId(boardId);
+        userRecommendationBoardRepository.save(userRecommendation);
+    }
+
+    @Transactional
+    public void decreaseRecommend(int boardId, String userEmail) {
+        Board board = boardRepository.findById(boardId)
+                .orElseThrow(() -> new EntityNotFoundException("해당 ID의 게시물을 찾을 수 없습니다."));
+        board.setRecommend(board.getRecommend() - 1);
+        boardRepository.save(board);
+
+        Recommendation userRecommendation = userRecommendationBoardRepository
+                .findByUserIdAndBoardId(userEmail, boardId);
+        userRecommendationBoardRepository.delete(userRecommendation);
+    }
+
+    public boolean hasUserRecommended(int boardId, String userEmail) {
+        return userRecommendationBoardRepository.existsByUserIdAndBoardId(userEmail, boardId);
     }
 
     public void delete(int boardId) {

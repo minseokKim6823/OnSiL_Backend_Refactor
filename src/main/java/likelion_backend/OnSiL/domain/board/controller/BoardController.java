@@ -70,15 +70,45 @@ public class BoardController {
         return ResponseEntity.ok().body(popularBoardResponseList);
     }
 
+//    @PostMapping("/recommend/up/{boardId}")
+//    public ResponseEntity<String> increaseRecommend(@PathVariable int boardId) {
+//        boardService.increaseRecommend(boardId);
+//        return ResponseEntity.ok("추천 증가 성공");
+//    }
+//
+//    @PostMapping("/recommend/down/{boardId}")
+//    public ResponseEntity<String> decreaseRecommend(@PathVariable int boardId) {
+//        boardService.decreaseRecommend(boardId);
+//        return ResponseEntity.ok("추천 감소 성공");
+//    }
+
     @PostMapping("/recommend/up/{boardId}")
     public ResponseEntity<String> increaseRecommend(@PathVariable int boardId) {
-        boardService.increaseRecommend(boardId);
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        String currentUserEmail = authentication.getName();
+        if (currentUserEmail == null) {
+            return ResponseEntity.status(HttpStatus.FORBIDDEN).body("사용자를 찾을 수 없습니다.");
+        }
+        if (boardService.hasUserRecommended(boardId, currentUserEmail)) {
+            return ResponseEntity.status(HttpStatus.FORBIDDEN).body("이미 추천한 게시물입니다.");
+        }
+
+        boardService.increaseRecommend(boardId, currentUserEmail);
         return ResponseEntity.ok("추천 증가 성공");
     }
 
     @PostMapping("/recommend/down/{boardId}")
     public ResponseEntity<String> decreaseRecommend(@PathVariable int boardId) {
-        boardService.decreaseRecommend(boardId);
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        String currentUserEmail = authentication.getName();
+        if (currentUserEmail == null) {
+            return ResponseEntity.status(HttpStatus.FORBIDDEN).body("사용자를 찾을 수 없습니다.");
+        }
+        if (!boardService.hasUserRecommended(boardId, currentUserEmail)) {
+            return ResponseEntity.status(HttpStatus.FORBIDDEN).body("추천하지 않은 게시물입니다.");
+        }
+
+        boardService.decreaseRecommend(boardId, currentUserEmail);
         return ResponseEntity.ok("추천 감소 성공");
     }
 

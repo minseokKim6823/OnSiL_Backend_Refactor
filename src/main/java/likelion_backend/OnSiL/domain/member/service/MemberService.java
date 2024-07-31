@@ -117,4 +117,7 @@ public class MemberService {
         memberJpaRepository.save(member);
         return ResponseEntity.ok(true);
     }
+    public void deleteById(Long id) {
+        memberJpaRepository.deleteById(id);
+    }
 }

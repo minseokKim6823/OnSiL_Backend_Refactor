@@ -10,6 +10,7 @@ import lombok.*;
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
+@Setter
 @Getter
 @Table(name="user")
 public class Member {
@@ -41,4 +42,5 @@ public class Member {
     public boolean isActivated() {
         return activate;
     }
+
 }

@@ -60,16 +60,17 @@ public class SecurityConfig {
 //                        .anyRequest().authenticated()
 //                )
 
-                .authorizeHttpRequests(authorizeHttpRequests -> authorizeHttpRequests
-                        .requestMatchers(
-                                new AntPathRequestMatcher("/api/login"),
-                                new AntPathRequestMatcher("/api/sign-up"),
-                                new AntPathRequestMatcher("/checkDuplicateMemberId"),
-                                new AntPathRequestMatcher("/findMemberId"),
-                                new AntPathRequestMatcher("/**")
-                        ).permitAll()
-                        .anyRequest().authenticated()
-                )
+//                .authorizeHttpRequests(authorizeHttpRequests -> authorizeHttpRequests
+//                        .requestMatchers(
+//                                new AntPathRequestMatcher("/api/login"),
+//                                new AntPathRequestMatcher("/api/sign-up"),
+//                                new AntPathRequestMatcher("/checkDuplicateMemberId"),
+//                                new AntPathRequestMatcher("/findMemberId"),
+//
+//                                new AntPathRequestMatcher("/**")
+//                        ).permitAll()
+//                        .anyRequest().authenticated()
+//                )
 
                 // 세션을 사용하지 않기 때문에 STATELESS로 설정
                 .sessionManagement(sessionManagement ->

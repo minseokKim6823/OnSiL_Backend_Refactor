@@ -5,13 +5,11 @@ import jakarta.validation.Valid;
 import likelion_backend.OnSiL.domain.member.dto.*;
 import likelion_backend.OnSiL.domain.member.entity.Member;
 import likelion_backend.OnSiL.domain.member.repository.MemberJpaRepository;
-import likelion_backend.OnSiL.domain.member.service.MailSendService;
 import likelion_backend.OnSiL.domain.member.service.MemberService;
 import likelion_backend.OnSiL.global.jwt.dto.TokenDto;
 import likelion_backend.OnSiL.global.jwt.service.TokenService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -19,12 +17,10 @@ import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.HashMap;
+import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
-
-
-
-    // Other methods...
 
 @Slf4j
 @RestController
@@ -36,7 +32,7 @@ public class MemberController {
     private final MemberService memberService;
     private final MemberJpaRepository memberJpaRepository;
     private final TokenService tokenService;
-    private final MailSendService mailService;
+//    private final MailSendService mailService;
 
     private static boolean emailauth=false;
 //    public MemberController(MemberService memberService, MemberJpaRepository memberJpaRepository, TokenService tokenService, MailSendService mailService) {
@@ -45,23 +41,28 @@ public class MemberController {
 //        this.tokenService = tokenService;
 //        this.mailService = mailService;
 //    }
-    @PostMapping("/mailSend")
-    public String mailSend(@RequestBody @Valid EmailRequestDto emailDto) {
-        System.out.println("이메일 인증 요청이 들어옴");
-        System.out.println("이메일 인증 이메일 :" + emailDto.getEmail());
-        return mailService.joinEmail(emailDto.getEmail());
+    @GetMapping(value = "/")
+    public String doGetHelloWorld() {
+    return "Hello World";
     }
 
-    @PostMapping("/mailauthCheck")
-    public String AuthCheck(@RequestBody @Valid EmailCheckDto emailCheckDto) {
-        Boolean Checked = mailService.CheckAuthNum(emailCheckDto.getEmail(), emailCheckDto.getAuthNum());
-        if (Checked) {
-            emailauth=true;
-            return "ok";
-        } else {
-            throw new NullPointerException("뭔가 잘못!");
-        }
-    }
+//    @PostMapping("/mailSend")
+//    public String mailSend(@RequestBody @Valid EmailRequestDto emailDto) {
+//        System.out.println("이메일 인증 요청이 들어옴");
+//        System.out.println("이메일 인증 이메일 :" + emailDto.getEmail());
+//        return mailService.joinEmail(emailDto.getEmail());
+//    }
+
+//    @PostMapping("/mailauthCheck")
+//    public String AuthCheck(@RequestBody @Valid EmailCheckDto emailCheckDto) {
+//        Boolean Checked = mailService.CheckAuthNum(emailCheckDto.getEmail(), emailCheckDto.getAuthNum());
+//        if (Checked) {
+//            emailauth=true;
+//            return "ok";
+//        } else {
+//            throw new NullPointerException("뭔가 잘못!");
+//        }
+//    }
 
     @PostMapping("/sign-up")
     public ResponseEntity<Boolean> signUp(@Valid @RequestBody SignUpDto signUpDto, BindingResult bindingResult) {
@@ -69,11 +70,6 @@ public class MemberController {
             log.info("아이디 혹은 비밀번호를 잘못입력했습니다.");
             return ResponseEntity.ok(false);
         }
-        if (emailauth==false){
-            log.info("이메일 인증을 완료해 주세요");
-            return ResponseEntity.ok(false);
-        }
-        emailauth=false;
         return memberService.signUp(signUpDto);
     }   // 회원가입
 
@@ -109,6 +105,26 @@ public class MemberController {
         if (memberJpaRepository.findById(id).isPresent()) {
             memberService.deleteById(id);
             return ResponseEntity.ok().build();
+        } else {
+            return ResponseEntity.notFound().build();
+        }
+    }
+
+    @GetMapping
+    public ResponseEntity<List<MemberResponseDto>> getAllMembers() {
+        List<Member> members = memberService.findAll();
+        List<MemberResponseDto> memberDtos = members.stream()
+                .map(MemberResponseDto::fromEntity)
+                .collect(Collectors.toList());
+        return ResponseEntity.ok(memberDtos);
+    }
+
+    @GetMapping("/{id}")
+    public ResponseEntity<MemberResponseDto> getMemberById(@PathVariable Long id) {
+        Optional<Member> member = memberService.findById(id);
+        if (member.isPresent()) {
+            MemberResponseDto memberDto = MemberResponseDto.fromEntity(member.get());
+            return ResponseEntity.ok(memberDto);
         } else {
             return ResponseEntity.notFound().build();
         }

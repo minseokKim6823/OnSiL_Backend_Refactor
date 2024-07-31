@@ -1,7 +1,7 @@
 //package likelion_backend.OnSiL.domain.healthnews.controller;
 //
 //import likelion_backend.OnSiL.domain.healthnews.entity.HealthNews;
-//import likelion_backend.OnSiL.domain.healthnews.service.HealthNewsService;
+//
 //import org.springframework.beans.factory.annotation.Autowired;
 //import org.springframework.web.bind.annotation.*;
 //

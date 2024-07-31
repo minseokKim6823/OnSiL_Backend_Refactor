@@ -3,6 +3,7 @@ package likelion_backend.OnSiL.domain.member.service;
 
 import com.amazonaws.services.s3.AmazonS3;
 import com.amazonaws.services.s3.model.ObjectMetadata;
+
 import likelion_backend.OnSiL.domain.member.controller.S3FileUploadController;
 import likelion_backend.OnSiL.domain.member.dto.MemberUpdateDto;
 import likelion_backend.OnSiL.domain.member.dto.SignUpDto;
@@ -13,7 +14,6 @@ import likelion_backend.OnSiL.global.jwt.entity.Authority;
 import lombok.AllArgsConstructor;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import net.minidev.json.JSONUtil;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -22,8 +22,8 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
+import java.util.List;
 import java.util.Optional;
-import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 @Slf4j
@@ -39,6 +39,7 @@ public class MemberService {
     private final PasswordEncoder passwordEncoder;
     private final AuthorityJpaRepository authorityJpaRepository;
     private final S3FileUploadController s3FileUploadController;
+
     @Service
     @RequiredArgsConstructor
     public class S3FileUploadService {
@@ -120,4 +121,8 @@ public class MemberService {
     public void deleteById(Long id) {
         memberJpaRepository.deleteById(id);
     }
+
+    public List<Member> findAll() { return memberJpaRepository.findAll();}
+
+    public Optional<Member> findById(Long id) { return memberJpaRepository.findById(id); }
 }

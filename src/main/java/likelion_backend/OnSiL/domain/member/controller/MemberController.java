@@ -5,13 +5,11 @@ import jakarta.validation.Valid;
 import likelion_backend.OnSiL.domain.member.dto.*;
 import likelion_backend.OnSiL.domain.member.entity.Member;
 import likelion_backend.OnSiL.domain.member.repository.MemberJpaRepository;
-//import likelion_backend.OnSiL.domain.member.service.MailSendService;
 import likelion_backend.OnSiL.domain.member.service.MemberService;
 import likelion_backend.OnSiL.global.jwt.dto.TokenDto;
 import likelion_backend.OnSiL.global.jwt.service.TokenService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -19,7 +17,9 @@ import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.HashMap;
+import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 
 @Slf4j
@@ -105,6 +105,26 @@ public class MemberController {
         if (memberJpaRepository.findById(id).isPresent()) {
             memberService.deleteById(id);
             return ResponseEntity.ok().build();
+        } else {
+            return ResponseEntity.notFound().build();
+        }
+    }
+
+    @GetMapping
+    public ResponseEntity<List<MemberResponseDto>> getAllMembers() {
+        List<Member> members = memberService.findAll();
+        List<MemberResponseDto> memberDtos = members.stream()
+                .map(MemberResponseDto::fromEntity)
+                .collect(Collectors.toList());
+        return ResponseEntity.ok(memberDtos);
+    }
+
+    @GetMapping("/{id}")
+    public ResponseEntity<MemberResponseDto> getMemberById(@PathVariable Long id) {
+        Optional<Member> member = memberService.findById(id);
+        if (member.isPresent()) {
+            MemberResponseDto memberDto = MemberResponseDto.fromEntity(member.get());
+            return ResponseEntity.ok(memberDto);
         } else {
             return ResponseEntity.notFound().build();
         }

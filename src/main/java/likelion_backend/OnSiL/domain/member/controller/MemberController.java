@@ -104,5 +104,14 @@ public class MemberController {
         public ResponseEntity<Boolean> updateMember(@PathVariable Long memberId, @RequestBody MemberUpdateDto memberUpdateDto) {
             return memberService.updateMember(memberId, memberUpdateDto);
     }
+    @DeleteMapping("/{id}")
+    public ResponseEntity<Void> deleteUser(@PathVariable Long id) {
+        if (memberJpaRepository.findById(id).isPresent()) {
+            memberService.deleteById(id);
+            return ResponseEntity.ok().build();
+        } else {
+            return ResponseEntity.notFound().build();
+        }
+    }
 }
 

@@ -52,7 +52,7 @@ public class TokenProvider implements InitializingBean {
         Date validity = new Date(now + this.tokenValidityMilliseconds);//만료 시간 설정
         log.info("authentication name = {}", authentication.getName());
         return Jwts.builder()
-                .setIssuer("living_alone")
+                .setIssuer("OnSiL")
                 .setSubject("login")
                 .claim(AUTHORITIES_KEY, authorities)
                 .signWith(key, SignatureAlgorithm.HS512)

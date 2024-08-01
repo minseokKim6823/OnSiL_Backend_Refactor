@@ -1,8 +1,9 @@
-package likelion_backend.OnSiL.domain.map.service;
+package likelion_backend.OnSiL.domain.map_reply.service;
 
-import likelion_backend.OnSiL.domain.map.dto.LocationDto;
-import likelion_backend.OnSiL.domain.map.entity.Location;
-import likelion_backend.OnSiL.domain.map.repository.LocationJpaRepository;
+
+import likelion_backend.OnSiL.domain.map_reply.dto.LocationReplyDto;
+import likelion_backend.OnSiL.domain.map_reply.entity.LocationReply;
+import likelion_backend.OnSiL.domain.map_reply.repository.LocationReplyJpaRepository;
 import likelion_backend.OnSiL.domain.member.entity.Member;
 import likelion_backend.OnSiL.domain.member.service.MemberService;
 import lombok.RequiredArgsConstructor;
@@ -10,27 +11,28 @@ import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 
+
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
-public class LocationService {
+public class LocationReplyService {
 
-    private final LocationJpaRepository locationJpaRepository;
+    private final LocationReplyJpaRepository locationJpaRepository;
 
     private final MemberService memberService;
 
-    public List<LocationDto> findALl(){
+    public List<LocationReplyDto> findALl(){
         return locationJpaRepository.findAll().stream().map(this::convertToDTO).collect(Collectors.toList());
     }
-    public Optional<LocationDto> findById(Long id) {
+    public Optional<LocationReplyDto> findById(Long id) {
         return locationJpaRepository.findById(id).map(this::convertToDTO);
     }
 
-    public LocationDto save(LocationDto locationDto) {
-        Location location = convertToEntity(locationDto);
+    public LocationReplyDto save(LocationReplyDto locationReplyDto) {
+        LocationReply location = convertToEntity(locationReplyDto);
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         Optional<Member> member = memberService.findByMemberId(authentication.getName());
         String memberNickname = member.map(Member::getNickname).orElse("anonymousWriter");
@@ -42,26 +44,16 @@ public class LocationService {
         locationJpaRepository.deleteById(id);
     }
 
-    private LocationDto convertToDTO(Location location) {
-        LocationDto locationDto = new LocationDto();
+    private LocationReplyDto convertToDTO(LocationReply location) {
+        LocationReplyDto locationDto = new LocationReplyDto();
         locationDto.setWriter(location.getWriter());
         locationDto.setContent(location.getContent());
-        locationDto.setTitle(location.getTitle());
-        locationDto.setStart_latitude(location.getStart_latitude());
-        locationDto.setEnd_latitude(location.getEnd_latitude());
-        locationDto.setStart_longitude(location.getStart_longitude());
-        locationDto.setEnd_longitude(location.getEnd_longitude());
         return locationDto;
     }
-    private Location convertToEntity(LocationDto locationDto){
-        Location location =new Location();
+    private LocationReply convertToEntity(LocationReplyDto locationDto){
+        LocationReply location =new LocationReply();
         location.setWriter(locationDto.getWriter());
-        location.setTitle(locationDto.getTitle());
         location.setContent(locationDto.getContent());
-        location.setStart_latitude(locationDto.getStart_latitude());
-        location.setEnd_latitude(locationDto.getEnd_latitude());
-        location.setStart_longitude(locationDto.getStart_longitude());
-        location.setEnd_longitude(locationDto.getEnd_longitude());
         return location;
     }
 

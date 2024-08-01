@@ -38,17 +38,6 @@ public class LocationReplyController {
         return ResponseEntity.ok(savedLocation);
     }
 
-    @PutMapping("/{id}")
-    public ResponseEntity<LocationReplyDto> updateLocation(@PathVariable Long id, @RequestBody LocationReplyDto locationDto) {
-        Optional<LocationReplyDto> locationOptional = locationService.findById(id);
-        if (locationOptional.isPresent()) {
-            LocationReplyDto updatedLocation = locationService.save(locationDto);
-            return ResponseEntity.ok(updatedLocation);
-        } else {
-            return ResponseEntity.notFound().build();
-        }
-    }
-
     @DeleteMapping("/{id}")
     public ResponseEntity<Void> deleteLocation(@PathVariable Long id) {
         if (locationService.findById(id).isPresent()) {

@@ -13,8 +13,9 @@ public class Location {
     @GeneratedValue(strategy = GenerationType.AUTO)
     @Column(length = 11)
     private Long id;
-    @Column(length = 30, nullable = false, unique= true)
+    @Column(length = 30)
     private String title;
+    private String content;
     @Column(length=50, nullable = false)
     private String writer;
     @Column(nullable = false, length = 50)

@@ -4,6 +4,7 @@ import jakarta.validation.Valid;
 import likelion_backend.OnSiL.domain.member.dto.*;
 import likelion_backend.OnSiL.domain.member.entity.Member;
 import likelion_backend.OnSiL.domain.member.repository.MemberJpaRepository;
+import likelion_backend.OnSiL.domain.member.service.MailSendService;
 import likelion_backend.OnSiL.domain.member.service.MemberService;
 import likelion_backend.OnSiL.global.jwt.dto.TokenDto;
 import likelion_backend.OnSiL.global.jwt.service.TokenService;
@@ -30,11 +31,9 @@ import java.util.stream.Collectors;
 public class MemberController {
 
     private final MemberService memberService;
-    private final MemberJpaRepository memberJpaRepository;
     private final TokenService tokenService;
-
+    private final MailSendService mailSendService;
     private static boolean emailauth = false;
-
 
     @PostMapping("/sign-up")
     public ResponseEntity<String> signUp(@Valid @RequestBody SignUpDto signUpDto, BindingResult bindingResult) {
@@ -43,11 +42,36 @@ public class MemberController {
             return ResponseEntity.ok("false");
         }
         else{
-            memberService.signUp(signUpDto);
-            return ResponseEntity.ok("회원가입 성공!!");
+            if(emailauth==true) {
+                memberService.signUp(signUpDto);
+                return ResponseEntity.ok("회원가입 성공!!");
+            }
+            else{
+                return ResponseEntity.ok("이메일 인증을 해주세요!");
+            }
         }
     }
+    @PostMapping("/mailSend")
+    public String mailSend(@RequestBody @Valid EmailRequestDto emailDto) {
+        System.out.println("이메일 인증 요청이 들어옴");
+        System.out.println("이메일 인증 이메일 :" + emailDto.email());
+        return mailSendService.joinEmail(emailDto.email());
+    }
 
+    @PostMapping("/mailauthCheck")
+    public String AuthCheck(@RequestBody @Valid EmailCheckDto emailCheckDto) {
+        Boolean Checked = mailSendService.CheckAuthNum(emailCheckDto.authNum());
+        if (Checked) {
+            emailauth=true;
+            return "ok";
+        } else {
+            throw new NullPointerException("뭔가 잘못!");
+        }
+    }
+//    @PostMapping("email/check")
+//    public ResponseEntity<String> emailCheck(@RequestBody EmailCheckDto emailCheckDto) {
+//        if(mailSendService.getAuthNumber()==emailCheckDto.email() && )
+//    }
     @PostMapping("/login")
     public ResponseEntity<TokenDto> login(@Valid @RequestBody LoginDto loginDto) {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();

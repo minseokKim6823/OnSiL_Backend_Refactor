@@ -108,12 +108,19 @@ public class MemberService {
         Member member = optionalMember.get();
 
         // Update fields
-        member.setName(memberUpdateDto.getName() != null ? memberUpdateDto.getName() : member.getName());
-        member.setNickname(memberUpdateDto.getNickname() != null ? memberUpdateDto.getNickname() : member.getNickname());
-        member.setProfile_pic(memberUpdateDto.getProfilePic() != null ? memberUpdateDto.getProfilePic() : member.getProfile_pic());
-        member.setHealth_con(memberUpdateDto.getHealthCon() != null ? memberUpdateDto.getHealthCon() : member.getHealth_con());
-        member.setText_size(memberUpdateDto.getTextSize() != 0 ? memberUpdateDto.getTextSize() : member.getText_size());
-        member.setActivate(memberUpdateDto.getActivate() != null ? memberUpdateDto.getActivate() : member.getActivate());
+//        member.setName(memberUpdateDto.getName() != null ? memberUpdateDto.getName() : member.getName());
+//        member.setNickname(memberUpdateDto.getNickname() != null ? memberUpdateDto.getNickname() : member.getNickname());
+//        member.setProfile_pic(memberUpdateDto.getProfilePic() != null ? memberUpdateDto.getProfilePic() : member.getProfile_pic());
+//        member.setHealth_con(memberUpdateDto.getHealthCon() != null ? memberUpdateDto.getHealthCon() : member.getHealth_con());
+//        member.setText_size(memberUpdateDto.getTextSize() != 0 ? memberUpdateDto.getTextSize() : member.getText_size());
+//        member.setActivate(memberUpdateDto.getActivate() != null ? memberUpdateDto.getActivate() : member.getActivate());
+
+        member.setName(memberUpdateDto.name() != null ? memberUpdateDto.name() : member.getName());
+        member.setNickname(memberUpdateDto.nickname() != null ? memberUpdateDto.nickname() : member.getNickname());
+        member.setProfile_pic(memberUpdateDto.profilePic() != null ? memberUpdateDto.profilePic() : member.getProfile_pic());
+        member.setHealth_con(memberUpdateDto.healthCon() != null ? memberUpdateDto.healthCon() : member.getHealth_con());
+        member.setText_size(memberUpdateDto.textSize() != 0 ? memberUpdateDto.textSize() : member.getText_size());
+        member.setActivate(memberUpdateDto.activate() != null ? memberUpdateDto.activate() : member.getActivate());
 
         memberJpaRepository.save(member);
         return ResponseEntity.ok(true);

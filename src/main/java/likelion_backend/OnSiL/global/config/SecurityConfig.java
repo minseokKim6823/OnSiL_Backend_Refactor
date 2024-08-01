@@ -41,7 +41,6 @@ public class SecurityConfig {
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
         http.cors(AbstractHttpConfigurer::disable);
         http
-                // token을 사용하는 방식이기 때문에 csrf를 disable합니다.
                 .csrf(AbstractHttpConfigurer::disable)
 
                 .exceptionHandling(exceptionHandling -> exceptionHandling
@@ -49,31 +48,8 @@ public class SecurityConfig {
                         .authenticationEntryPoint(jwtAuthenticationEntryPoint)
                 )
 
-//                .authorizeHttpRequests(authorizeHttpRequests -> authorizeHttpRequests
-//                        .requestMatchers(
-//                                PathRequest.toH2Console()
-//                                , new AntPathRequestMatcher("/api/login")
-//                                , new AntPathRequestMatcher("/api/sign-up")
-//                                , new AntPathRequestMatcher("/checkDuplicateMemberId")
-//                                , new AntPathRequestMatcher("/findMemberId"), new AntPathRequestMatcher("/**")
-//                        ).permitAll()
-//                        .anyRequest().authenticated()
-//                )
 
-//                .authorizeHttpRequests(authorizeHttpRequests -> authorizeHttpRequests
-//                        .requestMatchers(
-//                                new AntPathRequestMatcher("/api/login"),
-//                                new AntPathRequestMatcher("/api/sign-up"),
-//                                new AntPathRequestMatcher("/checkDuplicateMemberId"),
-//                                new AntPathRequestMatcher("/findMemberId"),
-//
-//                                new AntPathRequestMatcher("/**")
-//                        ).permitAll()
-//                        .anyRequest().authenticated()
-//                )
-
-                // 세션을 사용하지 않기 때문에 STATELESS로 설정
-                .sessionManagement(sessionManagement ->
+                .sessionManagement(sessionManagement ->         //세션 사용X
                         sessionManagement.sessionCreationPolicy(SessionCreationPolicy.STATELESS)
                 )
 
@@ -81,7 +57,7 @@ public class SecurityConfig {
                 .headers(headers ->
                         headers.frameOptions(HeadersConfigurer.FrameOptionsConfig::sameOrigin)
                 )
-                .apply(new JwtSecurityConfig(tokenProvider));
+                .with(new JwtSecurityConfig(tokenProvider), customizer -> {});
         return http.build();
     }
 }

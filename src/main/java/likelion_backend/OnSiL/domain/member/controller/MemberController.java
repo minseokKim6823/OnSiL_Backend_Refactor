@@ -70,9 +70,18 @@ public class MemberController {
         }
     }
 
-    @PutMapping("/members/{memberId}")
-    public ResponseEntity<Boolean> updateMember(@PathVariable Long memberId, @RequestBody MemberUpdateDto memberUpdateDto) {
-        return memberService.updateMember(memberId, memberUpdateDto);
+    @PutMapping("/mypage/update")
+    public ResponseEntity<String> updateMember(@Valid @RequestBody MemberUpdateDto memberUpdateDto) {
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+//        Object principal = authentication.getPrincipal();
+        String username = ((UserDetails) authentication.getPrincipal()).getUsername();
+        System.out.println(username);
+        ResponseEntity<Boolean> response = memberService.updateMember(username, memberUpdateDto);
+        if (response.getStatusCode().is2xxSuccessful()) {
+            return ResponseEntity.ok("업데이트 성공!!");
+        } else {
+            return ResponseEntity.status(response.getStatusCode()).body("업데이트 실패!!");
+        }
     }
 
     @Transactional

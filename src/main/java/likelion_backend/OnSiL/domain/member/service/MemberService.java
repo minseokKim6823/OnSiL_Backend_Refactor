@@ -98,8 +98,8 @@ public class MemberService {
         return memberJpaRepository.findByMemberId(memberId);
     }
     @Transactional
-    public ResponseEntity<Boolean> updateMember(Long memberId, MemberUpdateDto memberUpdateDto) {
-        Optional<Member> optionalMember = memberJpaRepository.findById(memberId);
+    public ResponseEntity<Boolean> updateMember(String memberId, MemberUpdateDto memberUpdateDto) {
+        Optional<Member> optionalMember = memberJpaRepository.findByMemberId(memberId);
 
         if (optionalMember.isEmpty()) {
             throw new RuntimeException("Member not found");

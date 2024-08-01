@@ -22,9 +22,9 @@ public class CommentController {
     }
 
     // Read
-    @GetMapping("/community/{communityId}")
-    public List<Comment> getCommentsByCommunityId(@PathVariable Long communityId) {
-        return commentService.getCommentsByCommunityId(communityId);
+    @GetMapping("/post/{postId}")
+    public List<Comment> getCommentsByPostId(@PathVariable Long postId) {
+        return commentService.getCommentsByPostId(postId);
     }
 
     @GetMapping("/{id}")

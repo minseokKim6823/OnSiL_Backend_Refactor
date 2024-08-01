@@ -1,35 +1,44 @@
 package likelion_backend.OnSiL.domain.healthnews.entity;
 
 import jakarta.persistence.*;
-import java.util.Date;
+import lombok.*;
+
+import java.time.LocalDate;
 
 @Entity
+@Data
+@Builder
+@NoArgsConstructor
+@AllArgsConstructor
 @Table(name = "health_news")
 public class HealthNews {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long news_id;
+    @Column(name = "news_id")
+    private Long id;
 
-    @Column(nullable = false)
+    @Column(length = 255, nullable = false)
     private String title;
 
-    @Column(nullable = false)
+    @Column(columnDefinition = "TEXT", nullable = false)
     private String content;
 
-    @Column(nullable = false)
+    @Column(length = 255)
     private String imageUrl;
 
     @Column(nullable = false)
-    @Temporal(TemporalType.DATE)
-    private Date date;
+    private LocalDate date;
 
-    public Long getNews_id() {
-        return news_id;
+    @Column(columnDefinition = "TEXT", nullable = false)
+    private String healthCon;
+
+    public Long getId() {
+        return id;
     }
 
-    public void setNews_id(Long news_id) {
-        this.news_id = news_id;
+    public void setId(Long id) {
+        this.id = id;
     }
 
     public String getTitle() {
@@ -56,12 +65,19 @@ public class HealthNews {
         this.imageUrl = imageUrl;
     }
 
-    public Date getDate() {
+    public LocalDate getDate() {
         return date;
     }
 
-    public void setDate(Date date) {
+    public void setDate(LocalDate date) {
         this.date = date;
     }
-// Getters and Setters
+
+    public String getHealthCon() {
+        return healthCon;
+    }
+
+    public void setHealthCon(String healthCon) {
+        this.healthCon = healthCon;
+    }
 }

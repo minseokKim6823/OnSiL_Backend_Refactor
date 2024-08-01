@@ -32,10 +32,22 @@ public class LikeController {
         return likeService.getLikesByPostId(postId);
     }
 
+    @GetMapping("/{id}")
+    public ResponseEntity<Like> getLikeById(@PathVariable Long id) {
+        Like like = likeService.getLikeById(id);
+        return ResponseEntity.ok(like);
+    }
+
     // Delete
-    @DeleteMapping
-    public ResponseEntity<Void> deleteLike(@RequestParam Long userId, @RequestParam Long postId) {
-        likeService.deleteLike(userId, postId);
+    @DeleteMapping("/{id}")
+    public ResponseEntity<Void> deleteLike(@PathVariable Long id) {
+        likeService.deleteLike(id);
+        return ResponseEntity.noContent().build();
+    }
+
+    @DeleteMapping("/user/{userId}/post/{postId}")
+    public ResponseEntity<Void> deleteLikeByUserIdAndPostId(@PathVariable Long userId, @PathVariable Long postId) {
+        likeService.deleteLikeByUserIdAndPostId(userId, postId);
         return ResponseEntity.noContent().build();
     }
 }

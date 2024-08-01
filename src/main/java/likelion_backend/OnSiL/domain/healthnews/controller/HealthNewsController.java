@@ -2,23 +2,52 @@ package likelion_backend.OnSiL.domain.healthnews.controller;
 
 import likelion_backend.OnSiL.domain.healthnews.entity.HealthNews;
 import likelion_backend.OnSiL.domain.healthnews.service.HealthNewsService;
-import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
+
 @RestController
-@RequestMapping("/api/news")
+@RequestMapping("/api/healthnews")
 public class HealthNewsController {
 
-    @Autowired
-    private HealthNewsService healthNewsService;
+    private final HealthNewsService healthNewsService;
 
-    @GetMapping("/{healthCondition}")
-    public String getHealthNews(@PathVariable String healthCondition) {
-        return healthNewsService.searchNews(healthCondition);
+    // Constructor injection is preferred
+    public HealthNewsController(HealthNewsService healthNewsService) {
+        this.healthNewsService = healthNewsService;
     }
 
-    @PostMapping("/save")
-    public void saveHealthNews(@RequestBody HealthNews healthNews) {
-        healthNewsService.saveNews(healthNews);
+    // 네이버 API를 통한 건강 뉴스 조회 및 저장
+    @GetMapping("/condition/{healthCon}")
+    public List<HealthNews> getHealthNewsByCondition(@PathVariable String healthCon) {
+        return healthNewsService.getHealthNewsByCondition(healthCon);
+    }
+
+    // Create
+    @PostMapping
+    public HealthNews createHealthNews(@RequestBody HealthNews healthNews) {
+        return healthNewsService.createHealthNews(healthNews);
+    }
+
+    // Read
+    @GetMapping("/{id}")
+    public ResponseEntity<HealthNews> getHealthNewsById(@PathVariable Long id) {
+        HealthNews healthNews = healthNewsService.getHealthNewsById(id);
+        return ResponseEntity.ok(healthNews);
+    }
+
+    // Update
+    @PutMapping("/{id}")
+    public ResponseEntity<HealthNews> updateHealthNews(@PathVariable Long id, @RequestBody HealthNews healthNewsDetails) {
+        HealthNews updatedHealthNews = healthNewsService.updateHealthNews(id, healthNewsDetails);
+        return ResponseEntity.ok(updatedHealthNews);
+    }
+
+    // Delete
+    @DeleteMapping("/{id}")
+    public ResponseEntity<Void> deleteHealthNews(@PathVariable Long id) {
+        healthNewsService.deleteHealthNews(id);
+        return ResponseEntity.noContent().build();
     }
 }

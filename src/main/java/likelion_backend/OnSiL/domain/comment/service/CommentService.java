@@ -19,8 +19,8 @@ public class CommentService {
     }
 
     // Read
-    public List<Comment> getCommentsByCommunityId(Long communityId) {
-        return commentRepository.findByCommunityId(communityId);
+    public List<Comment> getCommentsByPostId(Long postId) {
+        return commentRepository.findByPostId(postId);
     }
 
     public Comment getCommentById(Long id) {

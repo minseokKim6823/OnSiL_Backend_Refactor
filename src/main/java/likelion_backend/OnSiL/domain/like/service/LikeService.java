@@ -27,8 +27,16 @@ public class LikeService {
         return likeRepository.findByPostId(postId);
     }
 
+    public Like getLikeById(Long likeId) {
+        return likeRepository.findById(likeId).orElseThrow(() -> new RuntimeException("Like not found"));
+    }
+
     // Delete
-    public void deleteLike(Long userId, Long postId) {
+    public void deleteLike(Long likeId) {
+        likeRepository.deleteById(likeId);
+    }
+
+    public void deleteLikeByUserIdAndPostId(Long userId, Long postId) {
         likeRepository.deleteByUserIdAndPostId(userId, postId);
     }
 }

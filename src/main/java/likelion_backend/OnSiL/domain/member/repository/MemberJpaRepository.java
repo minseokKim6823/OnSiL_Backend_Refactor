@@ -10,5 +10,6 @@ import java.util.Optional;
 @Repository
 public interface MemberJpaRepository extends JpaRepository<Member, Long> {
     Optional<Member> findByMemberId(String memberId);
+    void deleteByMemberId(String memberId);
     Optional<Member> findOneWithAuthorityByMemberId(String memberId);
 }

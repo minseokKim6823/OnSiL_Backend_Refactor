@@ -13,6 +13,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 
@@ -34,18 +35,17 @@ public class MemberController {
 
     private static boolean emailauth = false;
 
-    @GetMapping(value = "/")
-    public String doGetHelloWorld() {
-        return "Hello World";
-    }
 
     @PostMapping("/sign-up")
-    public ResponseEntity<Boolean> signUp(@Valid @RequestBody SignUpDto signUpDto, BindingResult bindingResult) {
+    public ResponseEntity<String> signUp(@Valid @RequestBody SignUpDto signUpDto, BindingResult bindingResult) {
         if (bindingResult.hasErrors()) {
             log.info("아이디 혹은 비밀번호를 잘못입력했습니다.");
-            return ResponseEntity.ok(false);
+            return ResponseEntity.ok("false");
         }
-        return memberService.signUp(signUpDto);
+        else{
+            memberService.signUp(signUpDto);
+            return ResponseEntity.ok("회원가입 성공!!");
+        }
     }
 
     @PostMapping("/login")
@@ -75,11 +75,16 @@ public class MemberController {
         return memberService.updateMember(memberId, memberUpdateDto);
     }
 
-    @DeleteMapping("/{id}")
-    public ResponseEntity<Void> deleteUser(@PathVariable Long id) {
-        if (memberJpaRepository.findById(id).isPresent()) {
-            memberService.deleteById(id);
-            return ResponseEntity.ok().build();
+    @Transactional
+    @DeleteMapping("/delete")
+    public ResponseEntity<String> delMemberById() {
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        String username = ((UserDetails) authentication.getPrincipal()).getUsername();
+        System.out.println(username);
+        Optional<Member> member = memberService.findByMemberId(username);
+        if (member.isPresent()) {
+            memberService.deleteByMemberId(username);
+            return ResponseEntity.ok("삭제 성공");
         } else {
             return ResponseEntity.notFound().build();
         }

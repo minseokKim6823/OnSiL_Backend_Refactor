@@ -4,6 +4,7 @@ import jakarta.validation.Valid;
 import likelion_backend.OnSiL.domain.member.dto.*;
 import likelion_backend.OnSiL.domain.member.entity.Member;
 import likelion_backend.OnSiL.domain.member.repository.MemberJpaRepository;
+import likelion_backend.OnSiL.domain.member.service.MailSendService;
 import likelion_backend.OnSiL.domain.member.service.MemberService;
 import likelion_backend.OnSiL.global.jwt.dto.TokenDto;
 import likelion_backend.OnSiL.global.jwt.service.TokenService;
@@ -13,6 +14,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 
@@ -29,25 +31,47 @@ import java.util.stream.Collectors;
 public class MemberController {
 
     private final MemberService memberService;
-    private final MemberJpaRepository memberJpaRepository;
     private final TokenService tokenService;
-
+    private final MailSendService mailSendService;
     private static boolean emailauth = false;
 
-    @GetMapping(value = "/")
-    public String doGetHelloWorld() {
-        return "Hello World";
-    }
-
     @PostMapping("/sign-up")
-    public ResponseEntity<Boolean> signUp(@Valid @RequestBody SignUpDto signUpDto, BindingResult bindingResult) {
+    public ResponseEntity<String> signUp(@Valid @RequestBody SignUpDto signUpDto, BindingResult bindingResult) {
         if (bindingResult.hasErrors()) {
             log.info("아이디 혹은 비밀번호를 잘못입력했습니다.");
-            return ResponseEntity.ok(false);
+            return ResponseEntity.ok("false");
         }
-        return memberService.signUp(signUpDto);
+        else{
+            if(emailauth==true) {
+                memberService.signUp(signUpDto);
+                return ResponseEntity.ok("회원가입 성공!!");
+            }
+            else{
+                return ResponseEntity.ok("이메일 인증을 해주세요!");
+            }
+        }
+    }
+    @PostMapping("/mailSend")
+    public String mailSend(@RequestBody @Valid EmailRequestDto emailDto) {
+        System.out.println("이메일 인증 요청이 들어옴");
+        System.out.println("이메일 인증 이메일 :" + emailDto.email());
+        return mailSendService.joinEmail(emailDto.email());
     }
 
+    @PostMapping("/mailauthCheck")
+    public String AuthCheck(@RequestBody @Valid EmailCheckDto emailCheckDto) {
+        Boolean Checked = mailSendService.CheckAuthNum(emailCheckDto.authNum());
+        if (Checked) {
+            emailauth=true;
+            return "ok";
+        } else {
+            throw new NullPointerException("뭔가 잘못!");
+        }
+    }
+//    @PostMapping("email/check")
+//    public ResponseEntity<String> emailCheck(@RequestBody EmailCheckDto emailCheckDto) {
+//        if(mailSendService.getAuthNumber()==emailCheckDto.email() && )
+//    }
     @PostMapping("/login")
     public ResponseEntity<TokenDto> login(@Valid @RequestBody LoginDto loginDto) {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
@@ -70,16 +94,30 @@ public class MemberController {
         }
     }
 
-    @PutMapping("/members/{memberId}")
-    public ResponseEntity<Boolean> updateMember(@PathVariable Long memberId, @RequestBody MemberUpdateDto memberUpdateDto) {
-        return memberService.updateMember(memberId, memberUpdateDto);
+    @PutMapping("/mypage/update")
+    public ResponseEntity<String> updateMember(@Valid @RequestBody MemberUpdateDto memberUpdateDto) {
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+//        Object principal = authentication.getPrincipal();
+        String username = ((UserDetails) authentication.getPrincipal()).getUsername();
+        System.out.println(username);
+        ResponseEntity<Boolean> response = memberService.updateMember(username, memberUpdateDto);
+        if (response.getStatusCode().is2xxSuccessful()) {
+            return ResponseEntity.ok("업데이트 성공!!");
+        } else {
+            return ResponseEntity.status(response.getStatusCode()).body("업데이트 실패!!");
+        }
     }
 
-    @DeleteMapping("/{id}")
-    public ResponseEntity<Void> deleteUser(@PathVariable Long id) {
-        if (memberJpaRepository.findById(id).isPresent()) {
-            memberService.deleteById(id);
-            return ResponseEntity.ok().build();
+    @Transactional
+    @DeleteMapping("/delete")
+    public ResponseEntity<String> delMemberById() {
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        String username = ((UserDetails) authentication.getPrincipal()).getUsername();
+        System.out.println(username);
+        Optional<Member> member = memberService.findByMemberId(username);
+        if (member.isPresent()) {
+            memberService.deleteByMemberId(username);
+            return ResponseEntity.ok("삭제 성공");
         } else {
             return ResponseEntity.notFound().build();
         }

@@ -7,7 +7,7 @@ import lombok.Data;
 
 
 //@Data
-public record EmailCheckDto (String email,String authNum){
+public record EmailCheckDto (int authNum){
 //    @Email
 //    @NotEmpty(message = "이메일을 입력해 주세요")
 //    private String email;

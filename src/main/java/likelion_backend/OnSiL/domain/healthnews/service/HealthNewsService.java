@@ -1,4 +1,3 @@
-
 package likelion_backend.OnSiL.domain.healthnews.service;
 
 import likelion_backend.OnSiL.domain.healthnews.entity.HealthNews;

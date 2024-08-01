@@ -1,11 +1,12 @@
 package likelion_backend.OnSiL.global.config;
 
-import likelion_backend.OnSiL.global.config.JwtSecurityConfig;
+
 import likelion_backend.OnSiL.global.jwt.entity.TokenProvider;
 import likelion_backend.OnSiL.global.jwt.exception.JwtAccessDeniedHandler;
 import likelion_backend.OnSiL.global.jwt.exception.JwtAuthenticationEntryPoint;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.security.config.Customizer;
 import org.springframework.security.config.annotation.method.configuration.EnableMethodSecurity;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
@@ -15,7 +16,7 @@ import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
-import org.springframework.security.web.util.matcher.AntPathRequestMatcher;
+
 
 @EnableWebSecurity
 @EnableMethodSecurity
@@ -49,29 +50,6 @@ public class SecurityConfig {
                         .authenticationEntryPoint(jwtAuthenticationEntryPoint)
                 )
 
-//                .authorizeHttpRequests(authorizeHttpRequests -> authorizeHttpRequests
-//                        .requestMatchers(
-//                                PathRequest.toH2Console()
-//                                , new AntPathRequestMatcher("/api/login")
-//                                , new AntPathRequestMatcher("/api/sign-up")
-//                                , new AntPathRequestMatcher("/checkDuplicateMemberId")
-//                                , new AntPathRequestMatcher("/findMemberId"), new AntPathRequestMatcher("/**")
-//                        ).permitAll()
-//                        .anyRequest().authenticated()
-//                )
-
-//                .authorizeHttpRequests(authorizeHttpRequests -> authorizeHttpRequests
-//                        .requestMatchers(
-//                                new AntPathRequestMatcher("/api/login"),
-//                                new AntPathRequestMatcher("/api/sign-up"),
-//                                new AntPathRequestMatcher("/checkDuplicateMemberId"),
-//                                new AntPathRequestMatcher("/findMemberId"),
-//
-//                                new AntPathRequestMatcher("/**")
-//                        ).permitAll()
-//                        .anyRequest().authenticated()
-//                )
-
                 // 세션을 사용하지 않기 때문에 STATELESS로 설정
                 .sessionManagement(sessionManagement ->
                         sessionManagement.sessionCreationPolicy(SessionCreationPolicy.STATELESS)
@@ -81,7 +59,8 @@ public class SecurityConfig {
                 .headers(headers ->
                         headers.frameOptions(HeadersConfigurer.FrameOptionsConfig::sameOrigin)
                 )
-                .apply(new JwtSecurityConfig(tokenProvider));
+                .with(new JwtSecurityConfig(tokenProvider), Customizer.withDefaults());
         return http.build();
+
     }
 }

@@ -14,14 +14,12 @@ public class CorsConfig implements WebMvcConfigurer {
     public void addCorsMappings(CorsRegistry registry) {
         registry.addMapping("/**")
                 .allowedMethods("*")
-                .allowedOrigins("http://localhost:3000")
                 .allowedOrigins("http://localhost:8080");
     }
 
     @Bean
     public CorsFilter corsFilter() {
         CorsConfiguration corsConfiguration = new CorsConfiguration();
-        corsConfiguration.addAllowedOrigin("http://localhost:3000"); // 도메인
         corsConfiguration.addAllowedOrigin("http://localhost:8080");
 
         corsConfiguration.addAllowedMethod("*"); // 메서드

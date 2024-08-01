@@ -47,7 +47,6 @@ public class TokenProvider implements InitializingBean {
         String authorities = authentication.getAuthorities().stream()
                 .map(GrantedAuthority::getAuthority)
                 .collect(Collectors.joining(","));
-        //log.info("auth : {}", authorities);
         long now = (new Date()).getTime();
         Date validity = new Date(now + this.tokenValidityMilliseconds);//만료 시간 설정
         log.info("authentication name = {}", authentication.getName());
@@ -86,7 +85,6 @@ public class TokenProvider implements InitializingBean {
                 .parseClaimsJws(token)
                 .getBody();
 
-        //log.info(claims.get("username").toString());
 
 
         Collection<? extends GrantedAuthority> authorities = Arrays.stream(

@@ -16,7 +16,9 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
+import java.io.IOException;
 import java.util.List;
 
 @RestController
@@ -28,22 +30,22 @@ public class BoardController {
     private final BoardService boardService;
 
     @PostMapping(value = "/write")
-    public ResponseEntity<String> save(@RequestBody BoardRequestDTO boardDto) throws JsonProcessingException {
+    public ResponseEntity<String> save(@RequestBody BoardRequestDTO boardDto,@RequestParam(value = "image", required = false) MultipartFile imageFile) throws JsonProcessingException {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         String currentUserEmail = authentication.getName();
         if (currentUserEmail   == null) {
             return ResponseEntity.status(HttpStatus.FORBIDDEN).body("사용자를 찾을 수 없습니다.");
         }
-        boardService.save(boardDto);
+        boardService.save(boardDto,imageFile);
         return ResponseEntity.ok("저장 성공");
     }
 
     @PutMapping("/update/{boardId}")
-    public ResponseEntity<String> update(@RequestBody String boardData, @PathVariable int boardId) throws JsonProcessingException {
+    public ResponseEntity<String> update(@RequestBody String boardData, @PathVariable int boardId,@RequestParam(value = "image", required = false) MultipartFile imageFile) throws JsonProcessingException {
         try {
-            boardService.saveUpdate(boardData, boardId);
+            boardService.saveUpdate(boardData, boardId,imageFile);
             return ResponseEntity.ok("수정 성공");
-        } catch (EntityNotFoundException e) {
+        } catch (EntityNotFoundException | IOException e) {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body(e.getMessage());
         }
     }

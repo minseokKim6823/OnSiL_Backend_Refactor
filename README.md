@@ -25,3 +25,4 @@
 ![Docker](https://img.shields.io/badge/Docker-2496ED.svg?&logo=docker&logoColor=white)
 ![EC2](https://img.shields.io/badge/EC2-FF9900.svg?logo=amazonec2&logoColor=white)
 ![loadBalancer](https://img.shields.io/badge/loadBalancer-8C4FFF.svg?logo=awselasticloadbalancing&logoColor=white)
+![S3](https://img.shields.io/badge/amazons3-569A31.svg?logo=amazons3&logoColor=white)

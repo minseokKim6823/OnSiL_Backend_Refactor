@@ -9,6 +9,7 @@
 ![Spring Security](https://img.shields.io/badge/Spring_Security-6DB33F.svg?&logo=spring-security&logoColor=white)
 ![JWT](https://img.shields.io/badge/JWT-000000.svg?&logo=json-web-token&logoColor=white)
 ![Gradle](https://img.shields.io/badge/Gradle-02303A.svg?&logo=gradle)
+![NAVER](https://img.shields.io/badge/naverAPI-569A31.svg?logo=Naver&logoColor=white)
 ![Mail](https://img.shields.io/badge/SMTP-004788.svg?&logo=maildotcom)
 
 ### Frontend 
@@ -19,6 +20,7 @@
 
 ![MariaDB](https://img.shields.io/badge/MariaDB-003545.svg?&logo=mariadb)
 ![Redis](https://img.shields.io/badge/Redis-DC382D.svg?&logo=redis&logoColor=white)
+
 
 ### DevOps
 

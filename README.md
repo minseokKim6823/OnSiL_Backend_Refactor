@@ -11,6 +11,10 @@
 ![Gradle](https://img.shields.io/badge/Gradle-02303A.svg?&logo=gradle)
 ![Mail](https://img.shields.io/badge/SMTP-004788.svg?&logo=maildotcom)
 
+### Frontend 
+![Flutter](https://img.shields.io/badge/Flutter-02569B.svg?&logo=Flutter)
+
+
 ### DB
 
 ![MariaDB](https://img.shields.io/badge/MariaDB-003545.svg?&logo=mariadb)

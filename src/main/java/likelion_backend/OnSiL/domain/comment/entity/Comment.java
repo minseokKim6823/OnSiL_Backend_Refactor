@@ -12,7 +12,7 @@ public class Comment {
 
     private Long postId; // 댓글이 달린 게시글 ID
 
-    private String userId; // 댓글 작성자 ID
+    private String nickname; // 댓글 작성자 닉네임
 
     @Lob
     private String content; // 댓글 내용
@@ -37,12 +37,12 @@ public class Comment {
         this.postId = postId;
     }
 
-    public String getUserId() {
-        return userId;
+    public String getNickname() {
+        return nickname;
     }
 
-    public void setUserId(String userId) {
-        this.userId = userId;
+    public void setNickname(String nickname) {
+        this.nickname = nickname;
     }
 
     public String getContent() {

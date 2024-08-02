@@ -1,56 +1,38 @@
 package likelion_backend.OnSiL.domain.like.entity;
 
 import jakarta.persistence.*;
+import likelion_backend.OnSiL.domain.board.entity.Board;
+import likelion_backend.OnSiL.domain.member.entity.Member;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
+
 import java.time.LocalDateTime;
 
 @Entity
-@Table(name = "likes")
+@Table(name = "likes")  // 테이블명을 명시적으로 설정
+@Getter
+@Setter
+@NoArgsConstructor
 public class Like {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long likeId;
+    @Column(name = "like_id")
+    private Long id;
 
-    @Column(nullable = false)
-    private Long postId; // 게시글 ID
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "post_id")
+    private Board board;
 
-    @Column(nullable = false)
-    private Long userId; // 사용자 ID
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "user_id")
+    private Member member;
 
-    @Column(name = "created_at", nullable = false, updatable = false)
-    private LocalDateTime createdAt = LocalDateTime.now(); // 좋아요 누른 시간
+    private LocalDateTime createdAt;
 
-    // Getters and Setters
-
-    public Long getLikeId() {
-        return likeId;
-    }
-
-    public void setLikeId(Long likeId) {
-        this.likeId = likeId;
-    }
-
-    public Long getPostId() {
-        return postId;
-    }
-
-    public void setPostId(Long postId) {
-        this.postId = postId;
-    }
-
-    public Long getUserId() {
-        return userId;
-    }
-
-    public void setUserId(Long userId) {
-        this.userId = userId;
-    }
-
-    public LocalDateTime getCreatedAt() {
-        return createdAt;
-    }
-
-    public void setCreatedAt(LocalDateTime createdAt) {
-        this.createdAt = createdAt;
+    @PrePersist
+    protected void onCreate() {
+        this.createdAt = LocalDateTime.now();
     }
 }

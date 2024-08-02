@@ -1,7 +1,8 @@
 package likelion_backend.OnSiL.domain.diet.service;
 
 import likelion_backend.OnSiL.domain.diet.entity.Diet;
-import likelion_backend.OnSiL.domain.diet.Repository.DietRepository;
+import likelion_backend.OnSiL.domain.diet.entity.DietType;
+import likelion_backend.OnSiL.domain.diet.repository.DietRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -13,23 +14,20 @@ public class DietService {
     @Autowired
     private DietRepository dietRepository;
 
-    // Create
     public Diet createDiet(Diet diet) {
         return dietRepository.save(diet);
     }
 
-    // Read
-    public List<Diet> getAllDiets() {
-        return dietRepository.findAll();
+    public List<Diet> getDietsByUserId(Long userId) {
+        return dietRepository.findByUserId(userId);
     }
 
-    public Diet getDietById(Long id) {
-        return dietRepository.findById(id).orElseThrow(() -> new RuntimeException("Diet not found"));
+    public List<Diet> getDietsByDietType(DietType dietType) {
+        return dietRepository.findByDietType(dietType);
     }
 
-    // Update
-    public Diet updateDiet(Long id, Diet dietDetails) {
-        Diet diet = dietRepository.findById(id).orElseThrow(() -> new RuntimeException("Diet not found"));
+    public Diet updateDiet(Long dietId, Diet dietDetails) {
+        Diet diet = dietRepository.findById(dietId).orElseThrow(() -> new RuntimeException("Diet not found"));
         diet.setDietAmount(dietDetails.getDietAmount());
         diet.setDietType(dietDetails.getDietType());
         diet.setDietMaterial(dietDetails.getDietMaterial());
@@ -37,9 +35,8 @@ public class DietService {
         return dietRepository.save(diet);
     }
 
-    // Delete
-    public void deleteDiet(Long id) {
-        Diet diet = dietRepository.findById(id).orElseThrow(() -> new RuntimeException("Diet not found"));
+    public void deleteDiet(Long dietId) {
+        Diet diet = dietRepository.findById(dietId).orElseThrow(() -> new RuntimeException("Diet not found"));
         dietRepository.delete(diet);
     }
 }

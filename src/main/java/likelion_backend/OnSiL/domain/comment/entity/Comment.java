@@ -10,9 +10,9 @@ public class Comment {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long commentId;
 
-    private Long communityId; // 댓글이 달린 게시글 ID
+    private Long postId; // 댓글이 달린 게시글 ID
 
-    private Long userId; // 댓글 작성자 ID
+    private String nickname; // 댓글 작성자 닉네임
 
     @Lob
     private String content; // 댓글 내용
@@ -29,20 +29,20 @@ public class Comment {
         this.commentId = commentId;
     }
 
-    public Long getCommunityId() {
-        return communityId;
+    public Long getPostId() {
+        return postId;
     }
 
-    public void setCommunityId(Long communityId) {
-        this.communityId = communityId;
+    public void setPostId(Long postId) {
+        this.postId = postId;
     }
 
-    public Long getUserId() {
-        return userId;
+    public String getNickname() {
+        return nickname;
     }
 
-    public void setUserId(Long userId) {
-        this.userId = userId;
+    public void setNickname(String nickname) {
+        this.nickname = nickname;
     }
 
     public String getContent() {

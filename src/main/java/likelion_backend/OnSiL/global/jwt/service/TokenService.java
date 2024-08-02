@@ -39,4 +39,7 @@ public class TokenService {
 
         return new ResponseEntity<>(new TokenDto(jwt), httpHeaders, HttpStatus.OK);
     }
+    public String extractSubject(String token) {
+        return tokenProvider.extractSubject(token);
+    }
 }

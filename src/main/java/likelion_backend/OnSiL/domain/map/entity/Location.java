@@ -1,8 +1,11 @@
 package likelion_backend.OnSiL.domain.map.entity;
 
 import jakarta.persistence.*;
+import likelion_backend.OnSiL.domain.map_reply.entity.LocationReply;
 import lombok.Getter;
 import lombok.Setter;
+
+import java.util.List;
 
 @Entity
 @Getter
@@ -26,6 +29,12 @@ public class Location {
     private long end_latitude;
     @Column(nullable = false, length = 50)
     private long end_longitude;
+    @OneToMany (mappedBy = "location",fetch = FetchType.LAZY)
+    @OrderBy("id asc")
+    private List<LocationReply> replyList;
+
+    @Column(nullable = false)
+    private int likes = 0;
 
 }
 

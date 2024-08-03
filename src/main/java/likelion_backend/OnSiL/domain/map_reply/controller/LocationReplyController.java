@@ -35,10 +35,10 @@ public class LocationReplyController {
         }
     }
 
-    @PostMapping
-    @GetMapping("/{id}")
+    @PostMapping("/{locationId}")
     @Operation(summary = "산책 코스 게시판 댓글 작성 (삭제 예정) //민석")
-    public ResponseEntity<LocationReplyDto> createLocation(@RequestBody LocationReplyDto locationDto) {
+    public ResponseEntity<LocationReplyDto> createLocation(@PathVariable Long locationId,@RequestBody LocationReplyDto locationDto) {
+        locationDto.setLocationId(locationId);
         LocationReplyDto savedLocation = locationService.save(locationDto);
         return ResponseEntity.ok(savedLocation);
     }

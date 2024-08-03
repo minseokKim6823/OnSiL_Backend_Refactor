@@ -21,13 +21,11 @@ public class NewsApiResponseRepository {
     @Value("${naver.client.id}")
     private String newsApiClient;
 
-
-
-    public Optional<NewsApiResponseDto> getNewsApiResponseDto(String keyword) {
+    public Optional<NewsApiResponseDto> getNewsApiResponseDto(String keyword, int display, int start) {
         RestTemplate restTemplate = new RestTemplate();
         HttpHeaders headers = getNaverApiRequestHeaders();
 
-        String url = "https://openapi.naver.com/v1/search/news.json?query=" + keyword + "&display=10&sort=date";
+        String url = "https://openapi.naver.com/v1/search/news.json?query=" + keyword + "&display=" + display + "&start=" + start + "&sort=date";
         ResponseEntity<NewsApiResponseDto> response = restTemplate.exchange(url, HttpMethod.GET, new HttpEntity<>(headers), NewsApiResponseDto.class);
 
         if (response.getStatusCode().is2xxSuccessful()) {

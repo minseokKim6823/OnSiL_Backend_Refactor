@@ -14,6 +14,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -28,15 +29,28 @@ public class HealthNewsService {
     private final JsoupCrawling jsoupCrawling;
 
     public List<HealthNewsResponseDto> getNaverHealthNewsWithKeyword(String keyword) {
-        NewsApiResponseDto newsApiResponse = newsApiResponseRepository.getNewsApiResponseDto(keyword)
-                .orElseThrow(() -> new NewsNullException("No news found for keyword: " + keyword));
+        List<NewsSummaryDto> allNews = new ArrayList<>();
+        int display = 100;
+        int start = 1;
 
-        List<NewsSummaryDto> filteredNewsList = newsApiResponse.getItems().stream()
-                .filter(news -> news.getTitle().contains(keyword))
-                .map(news -> new NewsSummaryDto(news.getTitle(), news.getLink(), news.getDescription()))
-                .collect(Collectors.toList());
+        while (allNews.size() < 300) {
+            NewsApiResponseDto newsApiResponse = newsApiResponseRepository.getNewsApiResponseDto(keyword, display, start)
+                    .orElseThrow(() -> new NewsNullException("No news found for keyword: " + keyword));
 
-        List<HealthNewsResponseDto> responseDtos = filteredNewsList.stream()
+            List<NewsSummaryDto> filteredNewsList = newsApiResponse.getItems().stream()
+                    .filter(news -> news.getTitle().contains(keyword))
+                    .map(news -> new NewsSummaryDto(news.getTitle(), news.getLink(), news.getDescription()))
+                    .collect(Collectors.toList());
+
+            allNews.addAll(filteredNewsList);
+            start += display;
+
+            if (filteredNewsList.size() < display) {
+                break; // No more news items available
+            }
+        }
+
+        List<HealthNewsResponseDto> responseDtos = allNews.stream()
                 .map(news -> {
                     HealthNewsResponseDto responseDto = news.toHealthNewsResponseDto(jsoupCrawling);
                     logger.info("Processed news item: {}", responseDto);

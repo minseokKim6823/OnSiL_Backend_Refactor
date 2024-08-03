@@ -32,16 +32,13 @@ public class BoardController {
     @PostMapping("/write")
     @Operation(summary = "글작성 / 재영")
     public ResponseEntity<String> save(
-            @RequestPart("boardDto") BoardRequestDTO boardDto,
-            @RequestPart(value = "image", required = false) MultipartFile imageFile) {
-
+            @RequestPart("boardDto") BoardRequestDTO boardDto) {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         String currentUserEmail = authentication.getName();
         if (currentUserEmail == null) {
             return ResponseEntity.status(HttpStatus.FORBIDDEN).body("사용자를 찾을 수 없습니다.");
         }
-
-        boardService.save(boardDto, imageFile);
+        boardService.save(boardDto);
         return ResponseEntity.ok("저장 성공");
     }
     @PutMapping("/update/{boardId}")

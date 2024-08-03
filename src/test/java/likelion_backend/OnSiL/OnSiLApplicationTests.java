@@ -1,8 +1,6 @@
 package likelion_backend.OnSiL;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.databind.ObjectMapper;
-import jakarta.persistence.EntityNotFoundException;
 import likelion_backend.OnSiL.domain.board.controller.BoardController;
 import likelion_backend.OnSiL.domain.board.dto.BoardRequestDTO;
 import likelion_backend.OnSiL.domain.board.dto.BoardResponseDTO;
@@ -11,13 +9,11 @@ import likelion_backend.OnSiL.domain.board.repository.BoardRepository;
 import likelion_backend.OnSiL.domain.board.repository.MemberRepository;
 import likelion_backend.OnSiL.domain.board.repository.UserRecommendationBoardRepository;
 import likelion_backend.OnSiL.domain.board.service.BoardService;
-import likelion_backend.OnSiL.domain.board.service.S3FileUploadServiceBoard;
 import likelion_backend.OnSiL.domain.member.entity.Member;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -27,8 +23,7 @@ import org.springframework.mock.web.MockMultipartFile;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContext;
 import org.springframework.security.core.context.SecurityContextHolder;
-import org.springframework.test.annotation.Commit;
-
+import likelion_backend.OnSiL.global.util.S3FileUploadController;
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
@@ -59,9 +54,6 @@ class OnSiLApplicationTests {
 	private MemberRepository memberRepository;
 
 	@Mock
-	private S3FileUploadServiceBoard s3FileUploadService;
-
-	@Mock
 	private Authentication authentication;
 
 	@Mock
@@ -81,7 +73,7 @@ class OnSiLApplicationTests {
 	}
 
 	@Test
-	void testSaveBoard() throws IOException {
+	void testSaveBoard() {
 		// given
 		BoardRequestDTO boardRequestDTO = BoardRequestDTO.builder()
 				.title("mytitle")
@@ -89,14 +81,13 @@ class OnSiLApplicationTests {
 				.category(Board.Category.SAN)
 				.build();
 
-		MockMultipartFile imageFile = new MockMultipartFile("imageFile", "test-image.jpg", "image/jpeg", "test image content".getBytes());
-
 		Member mockMember = new Member();
 		when(memberRepository.findByMemberId("test@example.com")).thenReturn(Optional.of(mockMember));
-		when(s3FileUploadService.uploadFile(imageFile)).thenReturn("http://example.com/test-image.jpg");
 
-		// when & then
-		assertDoesNotThrow(() -> boardService.save(boardRequestDTO, imageFile));
+		// when
+		assertDoesNotThrow(() -> boardService.save(boardRequestDTO));
+
+		// then
 		verify(boardRepository, times(1)).save(any(Board.class));
 	}
 

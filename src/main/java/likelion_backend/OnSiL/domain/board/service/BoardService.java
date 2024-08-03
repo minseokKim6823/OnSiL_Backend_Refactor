@@ -1,5 +1,7 @@
 package likelion_backend.OnSiL.domain.board.service;
 
+import com.amazonaws.services.s3.AmazonS3;
+import com.amazonaws.services.s3.model.ObjectMetadata;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import jakarta.persistence.EntityNotFoundException;
@@ -12,8 +14,10 @@ import likelion_backend.OnSiL.domain.board.entity.Recommendation;
 import likelion_backend.OnSiL.domain.board.repository.BoardRepository;
 import likelion_backend.OnSiL.domain.board.repository.UserRecommendationBoardRepository;
 import likelion_backend.OnSiL.domain.member.entity.Member;
+import likelion_backend.OnSiL.global.util.S3FileUploadController;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.security.core.Authentication;
@@ -36,7 +40,8 @@ public class BoardService {
     private final BoardRepository boardRepository;
     private final UserRecommendationBoardRepository userRecommendationBoardRepository;
     private final MemberRepository memberRepository;
-    private final S3FileUploadServiceBoard s3FileUploadServiceBoard;
+    private final S3FileUploadController s3FileUploadController;
+
 
     /*@Transactional
     public void save(BoardRequestDTO boardDTO) {
@@ -62,7 +67,7 @@ public class BoardService {
         }
     } */
     @Transactional
-    public void save(BoardRequestDTO boardDTO, MultipartFile imageFile) {
+    public void save(BoardRequestDTO boardDTO) {
         try {
             Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
             if (authentication == null) {
@@ -80,13 +85,11 @@ public class BoardService {
             String nickname = member.getNickname();
             log.info("현재 사용자의 닉네임: {}", nickname);
 
-            String imageUrl = null;
-            if (imageFile != null && !imageFile.isEmpty()) {
-                imageUrl = s3FileUploadServiceBoard.uploadFile(imageFile);
-            }
-
             Board board = new Board();
-            board.setImage(imageUrl);
+            String imageUrl = boardDTO.getImage();
+            if (imageUrl != null && !imageUrl.isEmpty()) {
+                board.setImage(s3FileUploadController.getName());;
+            }
             board.setWriter(nickname);
             board.setTitle(boardDTO.getTitle());
             board.setContent(boardDTO.getContent());
@@ -107,7 +110,7 @@ public class BoardService {
         // ObjectMapper를 사용하여 JSON 문자열을 BoardDto 객체로 변환
         String imageUrl = null;
         if (imageFile != null && !imageFile.isEmpty()) {
-            imageUrl = s3FileUploadServiceBoard.uploadFile(imageFile);
+            imageUrl = s3FileUploadController.getName();
         }
         ObjectMapper objectMapper = new ObjectMapper();
         BoardRequestDTO updatedBoardDto = objectMapper.readValue(boardDTO, BoardRequestDTO.class);

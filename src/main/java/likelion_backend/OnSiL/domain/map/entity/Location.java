@@ -7,7 +7,7 @@ import lombok.Setter;
 @Entity
 @Getter
 @Setter
-
+@Table(name="walk_route")
 public class Location {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)

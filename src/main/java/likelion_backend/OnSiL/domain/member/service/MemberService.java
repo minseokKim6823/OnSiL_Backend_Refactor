@@ -4,7 +4,7 @@ package likelion_backend.OnSiL.domain.member.service;
 import com.amazonaws.services.s3.AmazonS3;
 import com.amazonaws.services.s3.model.ObjectMetadata;
 
-import likelion_backend.OnSiL.domain.member.controller.S3FileUploadController;
+import likelion_backend.OnSiL.global.util.S3FileUploadController;
 import likelion_backend.OnSiL.domain.member.dto.MemberUpdateDto;
 import likelion_backend.OnSiL.domain.member.dto.SignUpDto;
 import likelion_backend.OnSiL.domain.member.entity.Member;
@@ -81,6 +81,7 @@ public class MemberService {
                 .nickname(memberDto.nickname())
                 .authority(authority)
                 .status(memberDto.status())
+                .health_con(memberDto.health_con())
                 .profile_pic(s3FileUploadController.getName())
                 .activate(true)
 

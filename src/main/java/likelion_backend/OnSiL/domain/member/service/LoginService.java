@@ -45,9 +45,9 @@ public class LoginService implements UserDetailsService {
         return new User(member.getMemberId(), member.getPassword(), grantedAuthorities);
     }
 
-    @Transactional
-    public Optional<Member> getMemberWithAuthorities(String memberId) {
-        return memberJpaRepository.findOneWithAuthorityByMemberId(memberId);
-    }
+//    @Transactional
+//    public Optional<Member> getMemberWithAuthorities(String memberId) {
+//        return memberJpaRepository.findOneWithAuthorityByMemberId(memberId);
+//    }
 
 }

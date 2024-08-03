@@ -36,7 +36,7 @@ public class BoardService {
     private final BoardRepository boardRepository;
     private final UserRecommendationBoardRepository userRecommendationBoardRepository;
     private final MemberRepository memberRepository;
-    private final S3FileUploadService s3FileUploadService;
+    private final S3FileUploadServiceBoard s3FileUploadServiceBoard;
 
     /*@Transactional
     public void save(BoardRequestDTO boardDTO) {
@@ -82,7 +82,7 @@ public class BoardService {
 
             String imageUrl = null;
             if (imageFile != null && !imageFile.isEmpty()) {
-                imageUrl = s3FileUploadService.uploadFile(imageFile);
+                imageUrl = s3FileUploadServiceBoard.uploadFile(imageFile);
             }
 
             Board board = new Board();
@@ -107,7 +107,7 @@ public class BoardService {
         // ObjectMapper를 사용하여 JSON 문자열을 BoardDto 객체로 변환
         String imageUrl = null;
         if (imageFile != null && !imageFile.isEmpty()) {
-            imageUrl = s3FileUploadService.uploadFile(imageFile);
+            imageUrl = s3FileUploadServiceBoard.uploadFile(imageFile);
         }
         ObjectMapper objectMapper = new ObjectMapper();
         BoardRequestDTO updatedBoardDto = objectMapper.readValue(boardDTO, BoardRequestDTO.class);

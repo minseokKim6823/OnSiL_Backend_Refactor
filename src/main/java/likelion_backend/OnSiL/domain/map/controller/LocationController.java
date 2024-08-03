@@ -1,10 +1,18 @@
 package likelion_backend.OnSiL.domain.map.controller;
 
+
+
 import io.swagger.v3.oas.annotations.Operation;
 import likelion_backend.OnSiL.domain.map.dto.LocationDto;
+import likelion_backend.OnSiL.domain.map.entity.Location;
 import likelion_backend.OnSiL.domain.map.service.LocationService;
+import likelion_backend.OnSiL.domain.member.entity.Member;
+import likelion_backend.OnSiL.domain.member.service.MemberService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -12,11 +20,12 @@ import java.util.Optional;
 
 @RestController
 @RequestMapping("/location")
-
 public class LocationController {
 
     @Autowired
     private LocationService locationService;
+    @Autowired
+    private MemberService memberService;
 
     @GetMapping
     @Operation(summary = "산책 코스 전체 조회 //민석")
@@ -33,6 +42,10 @@ public class LocationController {
         } else {
             return ResponseEntity.notFound().build();
         }
+    }
+    @GetMapping("/top5")
+    public List<Location> getTop5Posts() {
+        return locationService.getTop5PostsByLikes();
     }
 
     @PostMapping
@@ -63,5 +76,29 @@ public class LocationController {
         } else {
             return ResponseEntity.notFound().build();
         }
+    }
+    @PostMapping("/{id}/like")
+    @Operation(summary = "산책 코스 좋아요 //민석")
+    public ResponseEntity<Void> likeLocation(@PathVariable Long id) {
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        Optional<Member> member = memberService.findByMemberId(authentication.getName());
+        if (member.isPresent()) {
+            locationService.likeLocation(id, member.get().getId());
+            return ResponseEntity.ok().build();
+        }
+        return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
+    }
+
+
+    @PostMapping("/{id}/unlike")
+    @Operation(summary = "산책 코스 좋아요 취소 //민석")
+    public ResponseEntity<Void> unlikeLocation(@PathVariable Long id) {
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        Optional<Member> member = memberService.findByMemberId(authentication.getName());
+        if (member.isPresent()) {
+            locationService.unlikeLocation(id, member.get().getId());
+            return ResponseEntity.ok().build();
+        }
+        return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
     }
 }

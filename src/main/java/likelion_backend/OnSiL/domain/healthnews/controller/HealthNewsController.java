@@ -1,53 +1,40 @@
 package likelion_backend.OnSiL.domain.healthnews.controller;
 
-import likelion_backend.OnSiL.domain.healthnews.entity.HealthNews;
+import io.swagger.v3.oas.annotations.Operation;
+import likelion_backend.OnSiL.domain.healthnews.dto.HealthNewsResponseDto;
 import likelion_backend.OnSiL.domain.healthnews.service.HealthNewsService;
+import likelion_backend.OnSiL.domain.member.service.MemberService;
+import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.RestController;
 
 import java.util.List;
 
 @RestController
-@RequestMapping("/api/healthnews")
+@RequestMapping("/healthnews")
+@RequiredArgsConstructor
 public class HealthNewsController {
-
     private final HealthNewsService healthNewsService;
+    private final MemberService memberService;
 
-    // Constructor injection is preferred
-    public HealthNewsController(HealthNewsService healthNewsService) {
-        this.healthNewsService = healthNewsService;
+    @GetMapping
+    @Operation(summary = "키워드로 건강 뉴스 검색 //준상")
+    public ResponseEntity<List<HealthNewsResponseDto>> getHealthNewsWithKeyword(@RequestParam("keyword") String keyword) {
+        return ResponseEntity.ok(healthNewsService.getNaverHealthNewsWithKeyword(keyword));
     }
 
-    // 네이버 API를 통한 건강 뉴스 조회 및 저장
-    @GetMapping("/condition/{healthCon}")
-    public List<HealthNews> getHealthNewsByCondition(@PathVariable String healthCon) {
-        return healthNewsService.getHealthNewsByCondition(healthCon);
-    }
-
-    // Create
-    @PostMapping
-    public HealthNews createHealthNews(@RequestBody HealthNews healthNews) {
-        return healthNewsService.createHealthNews(healthNews);
-    }
-
-    // Read
-    @GetMapping("/{id}")
-    public ResponseEntity<HealthNews> getHealthNewsById(@PathVariable Long id) {
-        HealthNews healthNews = healthNewsService.getHealthNewsById(id);
-        return ResponseEntity.ok(healthNews);
-    }
-
-    // Update
-    @PutMapping("/{id}")
-    public ResponseEntity<HealthNews> updateHealthNews(@PathVariable Long id, @RequestBody HealthNews healthNewsDetails) {
-        HealthNews updatedHealthNews = healthNewsService.updateHealthNews(id, healthNewsDetails);
-        return ResponseEntity.ok(updatedHealthNews);
-    }
-
-    // Delete
-    @DeleteMapping("/{id}")
-    public ResponseEntity<Void> deleteHealthNews(@PathVariable Long id) {
-        healthNewsService.deleteHealthNews(id);
-        return ResponseEntity.noContent().build();
+    @GetMapping("/user")
+    @Operation(summary = "유저의 건강 상태로 건강 뉴스 검색 //준상")
+    public ResponseEntity<List<HealthNewsResponseDto>> getHealthNewsForUser() {
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        String username = ((UserDetails) authentication.getPrincipal()).getUsername();
+        List<HealthNewsResponseDto> newsList = memberService.getHealthNewsByHealthCon(username);
+        return ResponseEntity.ok(newsList);
     }
 }

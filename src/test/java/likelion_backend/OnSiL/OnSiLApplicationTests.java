@@ -11,7 +11,7 @@ import likelion_backend.OnSiL.domain.board.repository.BoardRepository;
 import likelion_backend.OnSiL.domain.board.repository.MemberRepository;
 import likelion_backend.OnSiL.domain.board.repository.UserRecommendationBoardRepository;
 import likelion_backend.OnSiL.domain.board.service.BoardService;
-import likelion_backend.OnSiL.domain.board.service.S3FileUploadService;
+import likelion_backend.OnSiL.domain.board.service.S3FileUploadServiceBoard;
 import likelion_backend.OnSiL.domain.member.entity.Member;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -59,7 +59,7 @@ class OnSiLApplicationTests {
 	private MemberRepository memberRepository;
 
 	@Mock
-	private S3FileUploadService s3FileUploadService;
+	private S3FileUploadServiceBoard s3FileUploadService;
 
 	@Mock
 	private Authentication authentication;
@@ -84,8 +84,8 @@ class OnSiLApplicationTests {
 	void testSaveBoard() throws IOException {
 		// given
 		BoardRequestDTO boardRequestDTO = BoardRequestDTO.builder()
-				.title("5 Title")
-				.content("6 Content")
+				.title("mytitle")
+				.content("hello")
 				.category(Board.Category.SAN)
 				.build();
 

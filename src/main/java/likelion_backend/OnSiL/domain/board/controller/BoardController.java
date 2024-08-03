@@ -30,6 +30,7 @@ public class BoardController {
     private final BoardService boardService;
 
     @PostMapping(value = "/write")
+    @Operation(summary = "글작성 / 재영")
     public ResponseEntity<String> save(@RequestBody BoardRequestDTO boardDto,@RequestParam(value = "image", required = false) MultipartFile imageFile) throws JsonProcessingException {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         String currentUserEmail = authentication.getName();
@@ -41,6 +42,7 @@ public class BoardController {
     }
 
     @PutMapping("/update/{boardId}")
+    @Operation(summary = "글수정 / 재영")
     public ResponseEntity<String> update(@RequestBody String boardData, @PathVariable int boardId,@RequestParam(value = "image", required = false) MultipartFile imageFile) throws JsonProcessingException {
         try {
             boardService.saveUpdate(boardData, boardId,imageFile);
@@ -51,11 +53,13 @@ public class BoardController {
     }
 
     @DeleteMapping("/delete/{boardId}")
+    @Operation(summary = "글삭제 / 재영")
     public ResponseEntity<String> delete(@PathVariable int boardId) {
         boardService.delete(boardId);
         return ResponseEntity.ok("삭제 성공");
     }
     @GetMapping("/search/all")
+    @Operation(summary = "글 검색 / 재영")
     public ResponseEntity<List<BoardResponseDTO>> search(@RequestParam(required = false) String title)
             throws JsonProcessingException {
         List<BoardResponseDTO> boardResponseDtoList = boardService.search(title);
@@ -63,6 +67,7 @@ public class BoardController {
     }
 
     @GetMapping("/recommend/list")
+    @Operation(summary = "추천기준 검색 / 재영")
     public ResponseEntity<List<BoardResponseDTO>> boardrecommendList(
             @PageableDefault(page = 0, size = 7, sort = "id", direction = Sort.Direction.DESC) Pageable pageable) {
 
@@ -85,6 +90,7 @@ public class BoardController {
 //    }
 
     @PostMapping("/recommend/up/{boardId}")
+    @Operation(summary = "추천업 / 재영")
     public ResponseEntity<String> increaseRecommend(@PathVariable int boardId) {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         String currentUserEmail = authentication.getName();
@@ -100,6 +106,7 @@ public class BoardController {
     }
 
     @PostMapping("/recommend/down/{boardId}")
+    @Operation(summary = "추천다운 / 재영")
     public ResponseEntity<String> decreaseRecommend(@PathVariable int boardId) {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         String currentUserEmail = authentication.getName();

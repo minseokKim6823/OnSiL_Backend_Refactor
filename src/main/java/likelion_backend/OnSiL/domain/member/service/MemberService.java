@@ -4,6 +4,8 @@ package likelion_backend.OnSiL.domain.member.service;
 import com.amazonaws.services.s3.AmazonS3;
 import com.amazonaws.services.s3.model.ObjectMetadata;
 
+import likelion_backend.OnSiL.domain.healthnews.dto.HealthNewsResponseDto;
+import likelion_backend.OnSiL.domain.healthnews.service.HealthNewsService;
 import likelion_backend.OnSiL.domain.member.controller.S3FileUploadController;
 import likelion_backend.OnSiL.domain.member.dto.MemberUpdateDto;
 import likelion_backend.OnSiL.domain.member.dto.SignUpDto;
@@ -39,7 +41,7 @@ public class MemberService {
     private final PasswordEncoder passwordEncoder;
     private final AuthorityJpaRepository authorityJpaRepository;
     private final S3FileUploadController s3FileUploadController;
-
+    private final HealthNewsService healthNewsService;
     @Service
     @RequiredArgsConstructor
     public class S3FileUploadService {
@@ -59,7 +61,15 @@ public class MemberService {
             return fileUrl;
         }
     }
-
+    public List<HealthNewsResponseDto> getHealthNewsByHealthCon(String memberId) {
+        Optional<Member> member = memberJpaRepository.findByMemberId(memberId);
+        if (member.isPresent()) {
+            String healthCon = member.get().getHealth_con();
+            return healthNewsService.getNaverHealthNewsWithKeyword(healthCon);
+        } else {
+            throw new RuntimeException("Member not found");
+        }
+    }
 
     @Transactional
     public ResponseEntity<Boolean> signUp(SignUpDto memberDto) {

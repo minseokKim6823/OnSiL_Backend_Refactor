@@ -1,19 +1,17 @@
-package com.example.news.dto;
+package likelion_backend.OnSiL.domain.healthnews.dto;
 
-import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
 
 @Getter
 @Builder
-@AllArgsConstructor
-public class NewsResponseDto {
+public class HealthNewsResponseDto {
     private String title;
     private String link;
     private String description;
-    private String imageLink;
+    private String imageUrl;
 
     public boolean validateImageLink() {
-        return imageLink != null && !imageLink.isEmpty();
+        return imageUrl != null && !imageUrl.isEmpty();
     }
 }

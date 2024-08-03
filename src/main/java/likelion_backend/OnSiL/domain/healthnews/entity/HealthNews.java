@@ -24,7 +24,7 @@ public class HealthNews {
     @Column(columnDefinition = "TEXT", nullable = false)
     private String content;
 
-    @Column(length = 255)
+    @Column(length = 1024)
     private String imageUrl;
 
     @Column(nullable = false)

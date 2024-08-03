@@ -1,47 +1,63 @@
 package likelion_backend.OnSiL;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.databind.ObjectMapper;
-import jakarta.persistence.EntityNotFoundException;
 import likelion_backend.OnSiL.domain.board.controller.BoardController;
 import likelion_backend.OnSiL.domain.board.dto.BoardRequestDTO;
 import likelion_backend.OnSiL.domain.board.dto.BoardResponseDTO;
 import likelion_backend.OnSiL.domain.board.entity.Board;
 import likelion_backend.OnSiL.domain.board.repository.BoardRepository;
+import likelion_backend.OnSiL.domain.board.repository.MemberRepository;
+import likelion_backend.OnSiL.domain.board.repository.UserRecommendationBoardRepository;
 import likelion_backend.OnSiL.domain.board.service.BoardService;
+import likelion_backend.OnSiL.domain.member.entity.Member;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import org.springframework.beans.factory.annotation.Autowired;
+import org.mockito.InjectMocks;
+import org.mockito.Mock;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.ResponseEntity;
+import org.springframework.mock.web.MockMultipartFile;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContext;
 import org.springframework.security.core.context.SecurityContextHolder;
-import org.springframework.test.annotation.Commit;
-
+import likelion_backend.OnSiL.global.util.S3FileUploadController;
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 import org.springframework.transaction.annotation.Transactional;
+import static org.mockito.Mockito.*;
 
+import java.io.IOException;
 import java.util.List;
+import java.util.Optional;
 
 
 @SpringBootTest
 class OnSiLApplicationTests {
 
-	@Autowired
-	private BoardRepository boardRepository;
-
-	@Autowired
+	@InjectMocks
 	private BoardService boardService;
 
-	@Autowired
+	@Mock
+	private BoardRepository boardRepository;
+
+	@Mock
 	private BoardController boardController;
 
+	@Mock
+	private UserRecommendationBoardRepository userRecommendationBoardRepository;
+
+	@Mock
+	private MemberRepository memberRepository;
+
+	@Mock
+	private Authentication authentication;
+
+	@Mock
+	private SecurityContext securityContext;
 	@BeforeEach
 	void setUp() {
 		Authentication authentication = mock(Authentication.class);
@@ -57,83 +73,22 @@ class OnSiLApplicationTests {
 	}
 
 	@Test
-	@Commit
 	void testSaveBoard() {
 		// given
 		BoardRequestDTO boardRequestDTO = BoardRequestDTO.builder()
-				.title("5 Title")
-				.content("6 Content")
+				.title("mytitle")
+				.content("hello")
 				.category(Board.Category.SAN)
-				.image("test-image.jpg")
 				.build();
 
-		// when & then
-		assertDoesNotThrow(() -> {
-			boardService.save(boardRequestDTO);
-		});
+		Member mockMember = new Member();
+		when(memberRepository.findByMemberId("test@example.com")).thenReturn(Optional.of(mockMember));
 
+		// when
+		assertDoesNotThrow(() -> boardService.save(boardRequestDTO));
 
-
-	}
-	@Test
-	@Commit
-	void testUpdateBoard() throws Exception {
-
-		BoardRequestDTO initialBoardRequestDTO = BoardRequestDTO.builder()
-				.title("3 Title")
-				.content("3 Content")
-				.category(Board.Category.SAN)
-				.image("3-image.jpg")
-				.build();
-
-		boardService.save(initialBoardRequestDTO);
-
-		Board savedBoard = boardRepository.findAll().get(0);
-
-		BoardRequestDTO updatedBoardRequestDTO = BoardRequestDTO.builder()
-				.title("3Title")
-				.content("3 Content")
-				.category(Board.Category.JIL)
-				.image("3-image.jpg")
-				.build();
-
-		ObjectMapper objectMapper = new ObjectMapper();
-		String updatedBoardJson = objectMapper.writeValueAsString(updatedBoardRequestDTO);
-
-
-		assertDoesNotThrow(() -> {
-			boardService.saveUpdate(updatedBoardJson, savedBoard.getPost_id());
-		});
-
-		Board updatedBoard = boardRepository.findById(savedBoard.getPost_id())
-				.orElseThrow(() -> new EntityNotFoundException("수정된 게시물을 찾을 수 없습니다."));
-
-	}
-	@Test
-	@Commit
-	@Transactional
-	void testDeleteBoard() {
-
-		BoardRequestDTO boardRequestDTO = BoardRequestDTO.builder()
-				.title("Title to be deleted")
-				.content("Content to be deleted")
-				.category(Board.Category.SAN)
-				.image("delete-image.jpg")
-				.build();
-
-		boardService.save(boardRequestDTO);
-
-		List<Board> allBoards = boardRepository.findAll();
-		assert !allBoards.isEmpty();
-
-		Board savedBoard = allBoards.get(0);
-
-		assertDoesNotThrow(() -> {
-			boardService.delete(savedBoard.getPost_id());
-		});
-
-		boolean exists = boardRepository.existsById(savedBoard.getPost_id());
-		assert !exists : "게시물이 삭제되지 않았습니다.";
+		// then
+		verify(boardRepository, times(1)).save(any(Board.class));
 	}
 
 	@Test

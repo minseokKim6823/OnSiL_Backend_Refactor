@@ -4,8 +4,8 @@ package likelion_backend.OnSiL.domain.map.dto;
 import lombok.Getter;
 import lombok.Setter;
 
-@Setter
 @Getter
+@Setter
 public class LocationDto{
     private String title;
     private String writer;

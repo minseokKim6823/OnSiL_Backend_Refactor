@@ -1,12 +1,11 @@
 package likelion_backend.OnSiL.domain.board.dto;
 
 import likelion_backend.OnSiL.domain.board.entity.Board;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
+import lombok.*;
+import org.springframework.web.multipart.MultipartFile;
 
 @Getter
+@Setter
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor

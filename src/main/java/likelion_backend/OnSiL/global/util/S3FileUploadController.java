@@ -1,7 +1,8 @@
-package likelion_backend.OnSiL.domain.member.controller;
+package likelion_backend.OnSiL.global.util;
 
 import com.amazonaws.services.s3.AmazonS3;
 import com.amazonaws.services.s3.model.ObjectMetadata;
+import io.swagger.v3.oas.annotations.Operation;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpStatus;
@@ -34,6 +35,7 @@ public class S3FileUploadController {
 
     private String name;
     @PostMapping
+    @Operation(summary = "파일 업로드 회원가입 이전에 파일 업로드 해야됨 //민석")
     public ResponseEntity<String> uploadFile(@RequestParam("file") MultipartFile file) {
         try {
             String fileName = file.getOriginalFilename();

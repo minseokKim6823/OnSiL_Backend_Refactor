@@ -4,6 +4,7 @@ package likelion_backend.OnSiL.domain.map.controller;
 
 import io.swagger.v3.oas.annotations.Operation;
 import likelion_backend.OnSiL.domain.map.dto.LocationDto;
+import likelion_backend.OnSiL.domain.map.entity.Location;
 import likelion_backend.OnSiL.domain.map.service.LocationService;
 import likelion_backend.OnSiL.domain.member.entity.Member;
 import likelion_backend.OnSiL.domain.member.service.MemberService;
@@ -19,7 +20,6 @@ import java.util.Optional;
 
 @RestController
 @RequestMapping("/location")
-
 public class LocationController {
 
     @Autowired
@@ -42,6 +42,10 @@ public class LocationController {
         } else {
             return ResponseEntity.notFound().build();
         }
+    }
+    @GetMapping("/top5")
+    public List<Location> getTop5Posts() {
+        return locationService.getTop5PostsByLikes();
     }
 
     @PostMapping

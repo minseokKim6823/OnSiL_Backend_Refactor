@@ -32,7 +32,9 @@ public class LocationService {
         return locationJpaRepository.findById(id).map(this::convertToDTO);
     }
 
-
+    public List<Location> getTop5PostsByLikes() {
+        return locationJpaRepository.findTop5ByOrderByLikesDesc();
+    }
 
     public LocationDto save(LocationDto locationDto) {
         Location location = convertToEntity(locationDto);

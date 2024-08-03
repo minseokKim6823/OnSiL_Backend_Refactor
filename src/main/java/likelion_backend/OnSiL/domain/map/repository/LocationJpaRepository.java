@@ -8,5 +8,6 @@ import java.util.List;
 
 public interface LocationJpaRepository extends JpaRepository<Location,Long> {
 
-
+    @Query("SELECT l FROM Location l ORDER BY l.likes DESC limit 5")
+    List<Location> findTop5ByOrderByLikesDesc();
 }

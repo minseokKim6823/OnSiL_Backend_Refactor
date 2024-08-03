@@ -19,9 +19,9 @@ public class LikeController {
         return "Like added";
     }
 
-    @DeleteMapping("/{postId}")
-    public String deleteLike(@PathVariable Long postId) {
-        likeService.deleteLike(postId);
+    @DeleteMapping("/{likeId}")
+    public String deleteLike(@PathVariable Long likeId) {
+        likeService.deleteLike(likeId);
         return "Like removed";
     }
 }

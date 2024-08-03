@@ -1,4 +1,4 @@
-package likelion_backend.OnSiL.domain.member.controller;
+package likelion_backend.OnSiL.global.util;
 
 import com.amazonaws.services.s3.AmazonS3;
 import com.amazonaws.services.s3.model.ObjectMetadata;

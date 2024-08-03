@@ -81,6 +81,7 @@ public class MemberService {
                 .nickname(memberDto.nickname())
                 .authority(authority)
                 .status(memberDto.status())
+                .health_con(memberDto.health_con())
                 .profile_pic(s3FileUploadController.getName())
                 .activate(true)
 

@@ -1,5 +1,6 @@
 package likelion_backend.OnSiL.domain.member.controller;
 
+import io.swagger.v3.oas.annotations.Operation;
 import jakarta.validation.Valid;
 import likelion_backend.OnSiL.domain.member.dto.*;
 import likelion_backend.OnSiL.domain.member.entity.Member;
@@ -36,6 +37,7 @@ public class MemberController {
     private static boolean emailauth = false;
 
     @PostMapping("/sign-up")
+    @Operation(summary = "회원가입 (메일 인증 후 사용가능) //민석")
     public ResponseEntity<String> signUp(@Valid @RequestBody SignUpDto signUpDto, BindingResult bindingResult) {
         if (bindingResult.hasErrors()) {
             log.info("아이디 혹은 비밀번호를 잘못입력했습니다.");
@@ -52,6 +54,7 @@ public class MemberController {
         }
     }
     @PostMapping("/mailSend")
+    @Operation(summary = "메일 전송" + "{ \"email\": \"메일 보낼 이메일\"} //민석")
     public String mailSend(@RequestBody @Valid EmailRequestDto emailDto) {
         System.out.println("이메일 인증 요청이 들어옴");
         System.out.println("이메일 인증 이메일 :" + emailDto.email());
@@ -59,6 +62,7 @@ public class MemberController {
     }
 
     @PostMapping("/mailauthCheck")
+    @Operation(summary = "메일 인증 번호 확인 //민석")
     public String AuthCheck(@RequestBody @Valid EmailCheckDto emailCheckDto) {
         Boolean Checked = mailSendService.CheckAuthNum(emailCheckDto.authNum());
         if (Checked) {
@@ -73,6 +77,7 @@ public class MemberController {
 //        if(mailSendService.getAuthNumber()==emailCheckDto.email() && )
 //    }
     @PostMapping("/login")
+    @Operation(summary = "로그인 //민석")
     public ResponseEntity<TokenDto> login(@Valid @RequestBody LoginDto loginDto) {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         Optional<Member> MemberName = memberService.findByMemberId(loginDto.memberId());
@@ -81,20 +86,21 @@ public class MemberController {
         return tokenService.makeToken(loginDto);
     }
 
-    @PostMapping("/memberId/check")
-    public ResponseEntity<Boolean> checkDuplicate(@RequestBody HashMap<String, String> member) {
-        String memberId = member.get("memberId");
-        log.info(memberId);
-
-        Optional<Member> byMember = memberService.findByMemberId(memberId);
-        if (byMember.isEmpty()) {
-            return ResponseEntity.ok(true);
-        } else {
-            return ResponseEntity.ok(false);
-        }
-    }
+//    @PostMapping("/memberId/check")
+//    public ResponseEntity<Boolean> checkDuplicate(@RequestBody HashMap<String, String> member) {
+//        String memberId = member.get("memberId");
+//        log.info(memberId);
+//
+//        Optional<Member> byMember = memberService.findByMemberId(memberId);
+//        if (byMember.isEmpty()) {
+//            return ResponseEntity.ok(true);
+//        } else {
+//            return ResponseEntity.ok(false);
+//        }
+//    }
 
     @PutMapping("/mypage/update")
+    @Operation(summary = "회원 정보 수정 //민석")
     public ResponseEntity<String> updateMember(@Valid @RequestBody MemberUpdateDto memberUpdateDto) {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
 //        Object principal = authentication.getPrincipal();
@@ -108,22 +114,24 @@ public class MemberController {
         }
     }
 
-    @Transactional
-    @DeleteMapping("/delete")
-    public ResponseEntity<String> delMemberById() {
-        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-        String username = ((UserDetails) authentication.getPrincipal()).getUsername();
-        System.out.println(username);
-        Optional<Member> member = memberService.findByMemberId(username);
-        if (member.isPresent()) {
-            memberService.deleteByMemberId(username);
-            return ResponseEntity.ok("삭제 성공");
-        } else {
-            return ResponseEntity.notFound().build();
-        }
-    }
+//    @Transactional
+//    @DeleteMapping("/delete")
+//    @Operation(summary = "회원 탈퇴 //민석")
+//    public ResponseEntity<String> delMemberById() {
+//        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+//        String username = ((UserDetails) authentication.getPrincipal()).getUsername();
+//        System.out.println(username);
+//        Optional<Member> member = memberService.findByMemberId(username);
+//        if (member.isPresent()) {
+//            memberService.deleteByMemberId(username);
+//            return ResponseEntity.ok("삭제 성공");
+//        } else {
+//            return ResponseEntity.notFound().build();
+//        }
+//    }
 
     @GetMapping
+    @Operation(summary = "전체 회원 정보 조회 (테스트 용) //민석")
     public ResponseEntity<List<MemberResponseDto>> getAllMembers() {
         List<Member> members = memberService.findAll();
         List<MemberResponseDto> memberDtos = members.stream()
@@ -133,6 +141,7 @@ public class MemberController {
     }
 
     @GetMapping("/mypage")
+    @Operation(summary = "회원 정보 조회 //민석")
     public ResponseEntity<MemberResponseDto> getMemberById() {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         String username = ((UserDetails) authentication.getPrincipal()).getUsername();

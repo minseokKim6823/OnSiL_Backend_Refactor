@@ -12,7 +12,8 @@ import java.util.List;
 public class Board {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
-    private int post_id;
+    @Column(name = "post_id")
+    private int postId;
 
     @Column(name = "title")
     private String title;

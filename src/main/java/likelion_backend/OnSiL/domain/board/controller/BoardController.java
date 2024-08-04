@@ -5,6 +5,7 @@ import io.swagger.v3.oas.annotations.Operation;
 import jakarta.persistence.EntityNotFoundException;
 import likelion_backend.OnSiL.domain.board.dto.BoardRequestDTO;
 import likelion_backend.OnSiL.domain.board.dto.BoardResponseDTO;
+import likelion_backend.OnSiL.domain.board.entity.Board;
 import likelion_backend.OnSiL.domain.board.service.BoardService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
@@ -119,15 +120,12 @@ public class BoardController {
     }
 
     @GetMapping("/list")
-    @Operation(summary = "전체 게시글 조회 / 재영")
+    @Operation(summary = "전체 게시글 조회")
     public ResponseEntity<Page<BoardResponseDTO>> getAllBoards(
-            @PageableDefault(page = 0, size = 10, sort = "id", direction = Sort.Direction.DESC) Pageable pageable) {
-        Page<BoardResponseDTO> boardPage = boardService.getAllBoards(pageable).map(BoardResponseDTO::fromEntity);
-        return ResponseEntity.ok(boardPage);
+            @PageableDefault(page = 0, size = 10, sort = "postId", direction = Sort.Direction.DESC) Pageable pageable) {
+        Page<Board> boardPage = boardService.getAllBoards(pageable);
+        Page<BoardResponseDTO> boardResponseDTOPage = boardPage.map(BoardResponseDTO::fromEntity);
+        return ResponseEntity.ok(boardResponseDTOPage);
     }
-
-
-
-
 
 }

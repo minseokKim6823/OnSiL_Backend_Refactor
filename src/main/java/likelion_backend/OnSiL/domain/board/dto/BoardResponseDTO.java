@@ -23,7 +23,7 @@ public class BoardResponseDTO {
     // 엔티티에서 DTO로 변환하는 정적 메소드
     public static BoardResponseDTO fromEntity(Board board) {
         return BoardResponseDTO.builder()
-                .postId(board.getPost_id())
+                .postId(board.getPostId())
                 .title(board.getTitle())
                 .content(board.getContent())
                 .category(board.getCategory())

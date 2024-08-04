@@ -69,28 +69,13 @@ public class BoardService {
     @Transactional
     public void save(BoardRequestDTO boardDTO) {
         try {
-            Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-            if (authentication == null) {
-                throw new IllegalStateException("인증 정보가 없습니다.");
-            }
-            String currentUserEmail = authentication.getName();
-            log.info("현재 사용자의 이메일: {}", currentUserEmail);
 
-            // 사용자 엔티티 조회
-            Optional<Member> optionalMember = memberRepository.findByMemberId(currentUserEmail);
-            if (optionalMember.isEmpty()) {
-                throw new IllegalStateException("사용자 정보를 찾을 수 없습니다.");
-            }
-            Member member = optionalMember.get();
-            String nickname = member.getNickname();
-            log.info("현재 사용자의 닉네임: {}", nickname);
 
             Board board = new Board();
             String imageUrl = boardDTO.getImage();
             if (imageUrl != null && !imageUrl.isEmpty()) {
                 board.setImage(s3FileUploadController.getName());;
             }
-            board.setWriter(nickname);
             board.setTitle(boardDTO.getTitle());
             board.setContent(boardDTO.getContent());
             board.setCategory(boardDTO.getCategory());

@@ -33,14 +33,11 @@ public class BoardController {
     @Operation(summary = "글작성 / 재영")
     public ResponseEntity<String> save(
             BoardRequestDTO boardDto) {
-        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-        String currentUserEmail = authentication.getName();
-        if (currentUserEmail == null) {
-            return ResponseEntity.status(HttpStatus.FORBIDDEN).body("사용자를 찾을 수 없습니다.");
-        }
+
         boardService.save(boardDto);
         return ResponseEntity.ok("저장 성공");
     }
+
     @PutMapping("/update/{boardId}")
     @Operation(summary = "글수정 / 재영")
     public ResponseEntity<String> update(@RequestBody String boardData, @PathVariable int boardId,@RequestParam(value = "image", required = false) MultipartFile imageFile) throws JsonProcessingException {

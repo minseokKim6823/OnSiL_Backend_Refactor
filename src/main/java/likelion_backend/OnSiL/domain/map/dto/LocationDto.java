@@ -14,4 +14,6 @@ public class LocationDto{
     private long start_longitude;
     private long end_latitude;
     private long end_longitude;
+    private int likes;
+    private int replies;
 }

@@ -6,7 +6,7 @@ import likelion_backend.OnSiL.domain.map.entity.Location;
 import likelion_backend.OnSiL.domain.map.entity.LocationLike;
 import likelion_backend.OnSiL.domain.map.repository.LocationJpaRepository;
 import likelion_backend.OnSiL.domain.map.repository.LocationLikeRepository;
-
+import likelion_backend.OnSiL.domain.map.repository.LocationRepository;
 import likelion_backend.OnSiL.domain.member.entity.Member;
 import likelion_backend.OnSiL.domain.member.service.MemberService;
 import lombok.RequiredArgsConstructor;
@@ -22,6 +22,7 @@ import java.util.stream.Collectors;
 @RequiredArgsConstructor
 public class LocationService {
 
+    private final LocationRepository locationRepository;
     private final LocationJpaRepository locationJpaRepository;
     private final LocationLikeRepository locationLikeRepository;
     private final MemberService memberService;
@@ -107,5 +108,10 @@ public class LocationService {
         location.setLikes(location.getLikes());
         location.setReplies(location.getReplies());
         return location;
+    }
+
+    // 사용자별로 게시물 조회하는 메서드 추가
+    public List<LocationDto> findLocationsByWriter(String writer) {
+        return locationRepository.findByWriter(writer).stream().map(this::convertToDTO).collect(Collectors.toList());
     }
 }

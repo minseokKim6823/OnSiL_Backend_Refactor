@@ -101,4 +101,15 @@ public class LocationController {
         }
         return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
     }
+    @GetMapping("/my-locations")
+    @Operation(summary = "내가 작성한 산책 코스 조회")
+    public ResponseEntity<List<LocationDto>> getMyLocations() {
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        Optional<Member> member = memberService.findByMemberId(authentication.getName());
+        if (member.isPresent()) {
+            List<LocationDto> locations = locationService.findLocationsByWriter(member.get().getNickname());
+            return ResponseEntity.ok(locations);
+        }
+        return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
+    }
 }

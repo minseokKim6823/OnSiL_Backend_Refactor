@@ -1,8 +1,11 @@
 package likelion_backend.OnSiL.domain.map.service;
 
+import jakarta.transaction.Transactional;
 import likelion_backend.OnSiL.domain.map.dto.LocationDto;
 import likelion_backend.OnSiL.domain.map.entity.Location;
+import likelion_backend.OnSiL.domain.map.entity.LocationLike;
 import likelion_backend.OnSiL.domain.map.repository.LocationJpaRepository;
+import likelion_backend.OnSiL.domain.map.repository.LocationLikeRepository;
 import likelion_backend.OnSiL.domain.member.entity.Member;
 import likelion_backend.OnSiL.domain.member.service.MemberService;
 import lombok.RequiredArgsConstructor;
@@ -19,7 +22,7 @@ import java.util.stream.Collectors;
 public class LocationService {
 
     private final LocationJpaRepository locationJpaRepository;
-
+    private final LocationLikeRepository locationLikeRepository;
     private final MemberService memberService;
 
     public List<LocationDto> findALl(){
@@ -29,17 +32,53 @@ public class LocationService {
         return locationJpaRepository.findById(id).map(this::convertToDTO);
     }
 
+    public List<Location> getTop5PostsByLikes() {
+        return locationJpaRepository.findTop5ByOrderByLikesDesc();
+    }
+
     public LocationDto save(LocationDto locationDto) {
         Location location = convertToEntity(locationDto);
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         Optional<Member> member = memberService.findByMemberId(authentication.getName());
         String memberNickname = member.map(Member::getNickname).orElse("anonymousWriter");
         location.setWriter(memberNickname);
+        System.out.println(memberNickname);
         return convertToDTO(locationJpaRepository.save(location));
     }
 
     public void deleteById(Long id) {
         locationJpaRepository.deleteById(id);
+    }
+    @Transactional
+    public void likeLocation(Long locationId, Long memberId) {
+        Optional<LocationLike> existingLike = locationLikeRepository.findByLocationIdAndMemberId(locationId, memberId);
+        if (existingLike.isEmpty()) {
+            Location location = locationJpaRepository.findById(locationId)
+                    .orElseThrow(() -> new RuntimeException("Location not found"));
+            Member member = memberService.findById(memberId)
+                    .orElseThrow(() -> new RuntimeException("Member not found"));
+
+            LocationLike locationLike = new LocationLike();
+            locationLike.setLocation(location);
+            locationLike.setMember(member);
+            locationLikeRepository.save(locationLike);
+
+            location.setLikes(location.getLikes() + 1);
+            locationJpaRepository.save(location);
+        }
+    }
+
+    @Transactional
+    public void unlikeLocation(Long locationId, Long memberId) {
+        Optional<LocationLike> locationLike = locationLikeRepository.findByLocationIdAndMemberId(locationId, memberId);
+        if (locationLike.isPresent()) {
+            locationLikeRepository.delete(locationLike.get());
+
+            Location location = locationJpaRepository.findById(locationId)
+                    .orElseThrow(() -> new RuntimeException("Location not found"));
+            location.setLikes(location.getLikes() - 1);
+            locationJpaRepository.save(location);
+        }
     }
 
     private LocationDto convertToDTO(Location location) {

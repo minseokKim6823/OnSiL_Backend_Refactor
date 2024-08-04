@@ -136,4 +136,5 @@ public class MemberService {
     public List<Member> findAll() { return memberJpaRepository.findAll();}
 
     public Optional<Member> findById(Long id) { return memberJpaRepository.findById(id); }
+
 }

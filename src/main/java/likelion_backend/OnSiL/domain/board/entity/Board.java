@@ -11,17 +11,31 @@ import java.util.List;
 @Setter
 public class Board {
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long post_id;  // 변경: Integer -> Long
 
+    @GeneratedValue(strategy = GenerationType.AUTO)
+    private long post_id;  // 변경: Integer -> Long
+//=======
+  //  @GeneratedValue(strategy = GenerationType.AUTO)
+  //  private int post_id;
+//>>>>>>> develop
+
+    @Column(name = "title")
     private String title;
+
+    @Column(name = "content")
     private String content;
 
     @Enumerated(EnumType.STRING)
+    @Column(name = "category")
     private Category category;
 
+    @Column(name = "recommend")
     private int recommend;
+
+    @Column(name = "image")
     private String image;
+
+    @Column(name = "writer")
     private String writer;
 
     @OneToMany(mappedBy = "board", cascade = CascadeType.ALL, orphanRemoval = true)

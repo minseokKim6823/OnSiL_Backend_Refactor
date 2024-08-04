@@ -32,15 +32,11 @@ public class BoardController {
     @PostMapping("/write")
     @Operation(summary = "글작성 / 재영")
     public ResponseEntity<String> save(
-            BoardRequestDTO boardDto) {
-        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-        String currentUserEmail = authentication.getName();
-        if (currentUserEmail == null) {
-            return ResponseEntity.status(HttpStatus.FORBIDDEN).body("사용자를 찾을 수 없습니다.");
-        }
+            @RequestBody BoardRequestDTO boardDto) {
         boardService.save(boardDto);
         return ResponseEntity.ok("저장 성공");
     }
+
     @PutMapping("/update/{boardId}")
     @Operation(summary = "글수정 / 재영")
     public ResponseEntity<String> update(@RequestBody String boardData, @PathVariable int boardId,@RequestParam(value = "image", required = false) MultipartFile imageFile) throws JsonProcessingException {
@@ -58,6 +54,7 @@ public class BoardController {
         boardService.delete(boardId);
         return ResponseEntity.ok("삭제 성공");
     }
+
     @GetMapping("/search/all")
     @Operation(summary = "글 검색 / 재영")
     public ResponseEntity<List<BoardResponseDTO>> search(@RequestParam(required = false) String title)
@@ -119,6 +116,14 @@ public class BoardController {
 
         boardService.decreaseRecommend(boardId, currentUserEmail);
         return ResponseEntity.ok("추천 감소 성공");
+    }
+
+    @GetMapping("/list")
+    @Operation(summary = "전체 게시글 조회 / 재영")
+    public ResponseEntity<Page<BoardResponseDTO>> getAllBoards(
+            @PageableDefault(page = 0, size = 10, sort = "id", direction = Sort.Direction.DESC) Pageable pageable) {
+        Page<BoardResponseDTO> boardPage = boardService.getAllBoards(pageable).map(BoardResponseDTO::fromEntity);
+        return ResponseEntity.ok(boardPage);
     }
 
 

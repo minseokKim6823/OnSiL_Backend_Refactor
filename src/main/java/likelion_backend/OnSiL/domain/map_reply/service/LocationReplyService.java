@@ -41,9 +41,13 @@ public class LocationReplyService {
         String memberNickname = member.map(Member::getNickname).orElse("anonymousWriter");
         locationReply.setWriter(memberNickname);
 
-        Optional<Location> location = locationRepository.findById(locationReplyDto.getLocationId());
-        location.ifPresent(locationReply::setLocation);
-
+        Optional<Location> locationOpt = locationRepository.findById(locationReplyDto.getLocationId());
+        if (locationOpt.isPresent()) {
+            Location location = locationOpt.get();
+            location.setReplies(location.getReplies() + 1);
+            locationReply.setLocation(location);
+            locationRepository.save(location); // 변경된 Location 객체 저장
+        }
         return convertToDTO(locationJpaRepository.save(locationReply));
     }
 
@@ -56,6 +60,7 @@ public class LocationReplyService {
         locationReplyDto.setWriter(locationReply.getWriter());
         locationReplyDto.setContent(locationReply.getContent());
         locationReplyDto.setLocationId(locationReply.getLocation().getId());
+
         return locationReplyDto;
     }
 

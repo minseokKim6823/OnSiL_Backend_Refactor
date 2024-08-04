@@ -34,7 +34,8 @@ public class Location {
     private List<LocationReply> replyList;
 
     @Column(nullable = false)
-    private int likes = 0;
+    private int likes;
+    private int replies;
 
 }
 

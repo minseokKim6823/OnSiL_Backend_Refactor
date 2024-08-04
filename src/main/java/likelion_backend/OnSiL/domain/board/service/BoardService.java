@@ -42,44 +42,19 @@ public class BoardService {
     private final MemberRepository memberRepository;
     private final S3FileUploadController s3FileUploadController;
 
-
-    /*@Transactional
-    public void save(BoardRequestDTO boardDTO) {
-        try {
-            Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-            if (authentication == null) {
-                throw new IllegalStateException("인증 정보가 없습니다.");
-            }
-            String currentUserEmail = authentication.getName();
-            log.info("현재 사용자의 이메일: {}", currentUserEmail);
-            Board board = new Board();
-            board.setWriter(currentUserEmail);
-            board.setTitle(boardDTO.getTitle());
-            board.setContent(boardDTO.getContent());
-            board.setImage(boardDTO.getImage());
-            board.setCategory(boardDTO.getCategory());
-            board.setRecommend(0);
-            boardRepository.save(board);
-            log.info("게시물 저장 성공: {}", board);
-        } catch (Exception e) {
-            log.error("게시물 저장 실패", e);
-            throw new RuntimeException("게시물 저장 중 오류가 발생", e);
-        }
-    } */
     @Transactional
     public void save(BoardRequestDTO boardDTO) {
         try {
 
+            Board board = boardDTO.toEntity();
 
-            Board board = new Board();
             String imageUrl = boardDTO.getImage();
             if (imageUrl != null && !imageUrl.isEmpty()) {
                 board.setImage(s3FileUploadController.getName());;
             }
-            board.setTitle(boardDTO.getTitle());
-            board.setContent(boardDTO.getContent());
-            board.setCategory(boardDTO.getCategory());
+
             board.setRecommend(0);
+
             boardRepository.save(board);
             log.info("게시물 저장 성공: {}", board);
         } catch (Exception e) {
@@ -88,6 +63,7 @@ public class BoardService {
         }
     }
 
+    @Transactional
     public void saveUpdate(String boardDTO, int boardId, MultipartFile imageFile) throws  IOException {
         // 기존 게시물을 확인하여 존재하는지 확인
         Board existingBoard = boardRepository.findById(boardId)

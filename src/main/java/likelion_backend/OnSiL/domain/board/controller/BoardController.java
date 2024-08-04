@@ -32,8 +32,7 @@ public class BoardController {
     @PostMapping("/write")
     @Operation(summary = "글작성 / 재영")
     public ResponseEntity<String> save(
-            BoardRequestDTO boardDto) {
-
+            @RequestBody BoardRequestDTO boardDto) {
         boardService.save(boardDto);
         return ResponseEntity.ok("저장 성공");
     }
@@ -55,6 +54,7 @@ public class BoardController {
         boardService.delete(boardId);
         return ResponseEntity.ok("삭제 성공");
     }
+
     @GetMapping("/search/all")
     @Operation(summary = "글 검색 / 재영")
     public ResponseEntity<List<BoardResponseDTO>> search(@RequestParam(required = false) String title)

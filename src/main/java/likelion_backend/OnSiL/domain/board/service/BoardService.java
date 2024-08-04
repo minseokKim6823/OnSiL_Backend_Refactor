@@ -51,10 +51,11 @@ public class BoardService {
         String currentUserEmail = authentication.getName();
         try {
             Board board = boardDTO.toEntity();
-            String imageUrl = boardDTO.getImage();
-            if (imageUrl != null && !imageUrl.isEmpty()) {
-                board.setImage(s3FileUploadController.getName());;
-            }
+//            String imageUrl = boardDTO.getImage();
+//            if (imageUrl != null && !imageUrl.isEmpty()) {
+//                board.setImage(s3FileUploadController.getName());
+//            }
+            board.setImage(s3FileUploadController.getName());
             board.setRecommend(0);
             board.setContent(boardDTO.getContent());
             board.setTitle(boardDTO.getTitle());

@@ -98,21 +98,6 @@ public class BoardService {
         return boardRepository.findByBoardRecommendPost(pageable);
     }
 
-    /*@Transactional
-    public void increaseRecommend(int boardId) {
-        Board board = boardRepository.findById(boardId)
-                .orElseThrow(() -> new EntityNotFoundException("해당 ID의 게시물을 찾을 수 없습니다."));
-        board.setRecommend(board.getRecommend() + 1);
-        boardRepository.save(board);
-    }
-
-    @Transactional
-    public void decreaseRecommend(int boardId) {
-        Board board = boardRepository.findById(boardId)
-                .orElseThrow(() -> new EntityNotFoundException("해당 ID의 게시물을 찾을 수 없습니다."));
-        board.setRecommend(board.getRecommend() - 1);
-        boardRepository.save(board);
-    } */
     @Transactional
     public void increaseRecommend(int boardId, String userEmail) {
         Board board = boardRepository.findById(boardId)
@@ -153,5 +138,8 @@ public class BoardService {
     }
     public void delete(int boardId) {
         boardRepository.deleteById(boardId);
+    }
+    public Page<Board> getAllBoards(Pageable pageable) {
+        return boardRepository.findAll(pageable);
     }
 }

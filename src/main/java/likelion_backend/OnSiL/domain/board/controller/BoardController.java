@@ -118,6 +118,14 @@ public class BoardController {
         return ResponseEntity.ok("추천 감소 성공");
     }
 
+    @GetMapping("/list")
+    @Operation(summary = "전체 게시글 조회 / 재영")
+    public ResponseEntity<Page<BoardResponseDTO>> getAllBoards(
+            @PageableDefault(page = 0, size = 10, sort = "id", direction = Sort.Direction.DESC) Pageable pageable) {
+        Page<BoardResponseDTO> boardPage = boardService.getAllBoards(pageable).map(BoardResponseDTO::fromEntity);
+        return ResponseEntity.ok(boardPage);
+    }
+
 
 
 

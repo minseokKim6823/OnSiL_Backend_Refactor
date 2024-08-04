@@ -44,17 +44,22 @@ public class BoardService {
 
     @Transactional
     public void save(BoardRequestDTO boardDTO) {
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        if (authentication == null) {
+            throw new IllegalStateException("인증 정보가 없습니다.");
+        }
+        String currentUserEmail = authentication.getName();
         try {
-
             Board board = boardDTO.toEntity();
-
             String imageUrl = boardDTO.getImage();
             if (imageUrl != null && !imageUrl.isEmpty()) {
                 board.setImage(s3FileUploadController.getName());;
             }
-
             board.setRecommend(0);
-
+            board.setContent(boardDTO.getContent());
+            board.setTitle(boardDTO.getTitle());
+            board.setWriter(currentUserEmail);
+            board.setCategory(boardDTO.getCategory());
             boardRepository.save(board);
             log.info("게시물 저장 성공: {}", board);
         } catch (Exception e) {

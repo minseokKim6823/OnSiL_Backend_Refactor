@@ -38,6 +38,8 @@ public class Board {
     private List<Recommendation> recommendations;
 
     public enum Category {
-        SAN, JIL, CHIN
+        SAN, //산책
+        JIL, // 질병
+        CHIN // 커뮤니티
     }
 }

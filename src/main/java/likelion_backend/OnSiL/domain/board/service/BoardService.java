@@ -42,19 +42,47 @@ public class BoardService {
     private final MemberRepository memberRepository;
     private final S3FileUploadController s3FileUploadController;
 
+    /*@Transactional
+   public void save(BoardRequestDTO boardDTO) {
+       try {
+           Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+           if (authentication == null) {
+               throw new IllegalStateException("인증 정보가 없습니다.");
+           }
+           String currentUserEmail = authentication.getName();
+           log.info("현재 사용자의 이메일: {}", currentUserEmail);
+           Board board = new Board();
+           board.setWriter(currentUserEmail);
+           board.setTitle(boardDTO.getTitle());
+           board.setContent(boardDTO.getContent());
+           board.setImage(boardDTO.getImage());
+           board.setCategory(boardDTO.getCategory());
+           board.setRecommend(0);
+           boardRepository.save(board);
+           log.info("게시물 저장 성공: {}", board);
+       } catch (Exception e) {
+           log.error("게시물 저장 실패", e);
+           throw new RuntimeException("게시물 저장 중 오류가 발생", e);
+       }
+   } */
     @Transactional
     public void save(BoardRequestDTO boardDTO) {
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        if (authentication == null) {
+            throw new IllegalStateException("인증 정보가 없습니다.");
+        }
+        String currentUserEmail = authentication.getName();
         try {
-
             Board board = boardDTO.toEntity();
-
             String imageUrl = boardDTO.getImage();
             if (imageUrl != null && !imageUrl.isEmpty()) {
                 board.setImage(s3FileUploadController.getName());;
             }
-
             board.setRecommend(0);
-
+            board.setContent(boardDTO.getContent());
+            board.setTitle(boardDTO.getTitle());
+            board.setWriter(currentUserEmail);
+            board.setCategory(boardDTO.getCategory());
             boardRepository.save(board);
             log.info("게시물 저장 성공: {}", board);
         } catch (Exception e) {

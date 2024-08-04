@@ -1,8 +1,10 @@
 package likelion_backend.OnSiL.domain.map_reply.entity;
 
 import jakarta.persistence.*;
+import likelion_backend.OnSiL.domain.map.entity.Location;
 import lombok.Getter;
 import lombok.Setter;
+
 
 @Entity
 @Getter
@@ -17,5 +19,9 @@ public class LocationReply {
     private String content;
     @Column(length = 50 )
     private String writer;
+
+    @ManyToOne(fetch = FetchType.EAGER)
+    @JoinColumn(name="location_id")
+    private Location location;
 }
 

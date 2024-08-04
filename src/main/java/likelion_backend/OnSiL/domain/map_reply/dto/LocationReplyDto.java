@@ -9,4 +9,5 @@ import lombok.Setter;
 public class LocationReplyDto {
     private String writer;
     private String content;
+    private Long locationId;
 }

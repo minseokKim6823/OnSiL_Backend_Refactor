@@ -6,6 +6,7 @@ import likelion_backend.OnSiL.domain.map.entity.Location;
 import likelion_backend.OnSiL.domain.map.entity.LocationLike;
 import likelion_backend.OnSiL.domain.map.repository.LocationJpaRepository;
 import likelion_backend.OnSiL.domain.map.repository.LocationLikeRepository;
+
 import likelion_backend.OnSiL.domain.member.entity.Member;
 import likelion_backend.OnSiL.domain.member.service.MemberService;
 import lombok.RequiredArgsConstructor;
@@ -90,6 +91,8 @@ public class LocationService {
         locationDto.setEnd_latitude(location.getEnd_latitude());
         locationDto.setStart_longitude(location.getStart_longitude());
         locationDto.setEnd_longitude(location.getEnd_longitude());
+        locationDto.setLikes(location.getLikes());
+        locationDto.setReplies(location.getReplies());
         return locationDto;
     }
     private Location convertToEntity(LocationDto locationDto){
@@ -101,7 +104,8 @@ public class LocationService {
         location.setEnd_latitude(locationDto.getEnd_latitude());
         location.setStart_longitude(locationDto.getStart_longitude());
         location.setEnd_longitude(locationDto.getEnd_longitude());
+        location.setLikes(location.getLikes());
+        location.setReplies(location.getReplies());
         return location;
     }
-
 }

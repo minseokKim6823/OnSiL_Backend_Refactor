@@ -58,7 +58,7 @@ public class BoardReplyService {
         BoardReplyDto boardReplyDto = new BoardReplyDto();
         boardReplyDto.setWriter(boardReply.getWriter());
         boardReplyDto.setContent(boardReply.getContent());
-        boardReplyDto.setBoardId(boardReply.getBoard().getPost_id());
+        boardReplyDto.setBoardId(boardReply.getBoard().getPostId());
         return boardReplyDto;
     }
 

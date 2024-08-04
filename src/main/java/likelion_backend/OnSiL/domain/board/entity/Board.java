@@ -13,11 +13,9 @@ public class Board {
     @Id
 
     @GeneratedValue(strategy = GenerationType.AUTO)
-    private long post_id;  // 변경: Integer -> Long
-//=======
-  //  @GeneratedValue(strategy = GenerationType.AUTO)
-  //  private int post_id;
-//>>>>>>> develop
+
+    @Column(name = "post_id")
+    private long postId;
 
     @Column(name = "title")
     private String title;
@@ -42,6 +40,8 @@ public class Board {
     private List<Recommendation> recommendations;
 
     public enum Category {
-        SAN, JIL, CHIN
+        SAN, //산책
+        JIL, // 질병
+        CHIN // 커뮤니티
     }
 }

@@ -14,6 +14,7 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -35,6 +36,9 @@ import java.util.List;
 import java.util.Optional;
 
 
+
+
+
 @SpringBootTest
 class OnSiLApplicationTests {
 
@@ -44,6 +48,8 @@ class OnSiLApplicationTests {
 	@Mock
 	private BoardRepository boardRepository;
 
+
+	@Autowired
 	@Mock
 	private BoardController boardController;
 
@@ -58,6 +64,7 @@ class OnSiLApplicationTests {
 
 	@Mock
 	private SecurityContext securityContext;
+
 	@BeforeEach
 	void setUp() {
 		Authentication authentication = mock(Authentication.class);
@@ -106,8 +113,8 @@ class OnSiLApplicationTests {
 		popularBoardsPage.getContent().forEach(board ->
 				System.out.println("보드ID: " + board.getPost_id() + ", 제목: " + board.getTitle() + ", 추천수: " + board.getRecommend())
 		);
-
 	}
+
 	@Test
 	@Transactional
 	void testSearchAllBoards() throws JsonProcessingException {
@@ -124,6 +131,7 @@ class OnSiLApplicationTests {
 		);
 
 	}
+
 	@Test
 	@Transactional
 	void testSearchBoardByTitle() throws JsonProcessingException {

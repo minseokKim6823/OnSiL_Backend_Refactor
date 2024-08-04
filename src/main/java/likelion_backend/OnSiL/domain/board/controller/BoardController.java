@@ -32,7 +32,7 @@ public class BoardController {
     @PostMapping("/write")
     @Operation(summary = "글작성 / 재영")
     public ResponseEntity<String> save(
-            @RequestPart("boardDto") BoardRequestDTO boardDto) {
+            BoardRequestDTO boardDto) {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         String currentUserEmail = authentication.getName();
         if (currentUserEmail == null) {

@@ -103,7 +103,7 @@ public class BoardService {
         }
     }
 
-    public void saveUpdate(String boardDTO, int boardId, MultipartFile imageFile) throws  IOException {
+    public void saveUpdate(String boardDTO, long boardId, MultipartFile imageFile) throws  IOException {
         // 기존 게시물을 확인하여 존재하는지 확인
         Board existingBoard = boardRepository.findById(boardId)
                 .orElseThrow(() -> new EntityNotFoundException("해당 ID의 게시물을 찾을 수 없습니다."));
@@ -153,7 +153,7 @@ public class BoardService {
         boardRepository.save(board);
     } */
     @Transactional
-    public void increaseRecommend(int boardId, String userEmail) {
+    public void increaseRecommend(long boardId, String userEmail) {
         Board board = boardRepository.findById(boardId)
                 .orElseThrow(() -> new EntityNotFoundException("해당 ID의 게시물을 찾을 수 없습니다."));
         board.setRecommend(board.getRecommend() + 1);
@@ -166,7 +166,7 @@ public class BoardService {
     }
 
     @Transactional
-    public void decreaseRecommend(int boardId, String userEmail) {
+    public void decreaseRecommend(long boardId, String userEmail) {
         // 게시물 엔티티 가져오기
         Board board = boardRepository.findById(boardId)
                 .orElseThrow(() -> new EntityNotFoundException("해당 ID의 게시물을 찾을 수 없습니다."));
@@ -182,7 +182,7 @@ public class BoardService {
             userRecommendationBoardRepository.delete(userRecommendation);
         }
     }
-    public boolean hasUserRecommended(int boardId, String userEmail) {
+    public boolean hasUserRecommended(long boardId, String userEmail) {
         // 게시물 엔티티 가져오기
         Board board = boardRepository.findById(boardId)
                 .orElseThrow(() -> new EntityNotFoundException("해당 ID의 게시물을 찾을 수 없습니다."));
@@ -190,7 +190,7 @@ public class BoardService {
         // 추천 기록 존재 여부 확인
         return userRecommendationBoardRepository.existsByUserIdAndBoard(userEmail, board);
     }
-    public void delete(int boardId) {
+    public void delete(long boardId) {
         boardRepository.deleteById(boardId);
     }
 }

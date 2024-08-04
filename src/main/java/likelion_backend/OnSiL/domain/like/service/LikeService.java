@@ -21,7 +21,7 @@ public class LikeService {
     @Autowired
     private MemberJpaRepository memberRepository;
 
-    public void createLike(int postId, String memberId) {
+    public void createLike(long postId, String memberId) {
         Board board = boardRepository.findById(postId)
                 .orElseThrow(() -> new IllegalArgumentException("Invalid post ID"));
         Member member = memberRepository.findByMemberId(memberId)

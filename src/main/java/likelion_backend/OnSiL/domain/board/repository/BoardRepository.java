@@ -9,7 +9,7 @@ import org.springframework.data.repository.query.Param;
 
 import java.util.List;
 
-public interface BoardRepository extends JpaRepository<Board, Integer> {
+public interface BoardRepository extends JpaRepository<Board, Long> {  // 변경: Integer -> Long
     @Query("SELECT b FROM Board b ORDER BY b.recommend DESC")
     Page<Board> findByBoardRecommendPost(Pageable pageable);
 

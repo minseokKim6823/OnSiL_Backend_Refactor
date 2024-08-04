@@ -12,7 +12,7 @@ import java.util.List;
 public class Board {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private int post_id;
+    private Long post_id;  // 변경: Integer -> Long
 
     private String title;
     private String content;

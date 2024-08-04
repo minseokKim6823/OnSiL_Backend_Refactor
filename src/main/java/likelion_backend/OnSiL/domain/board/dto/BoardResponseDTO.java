@@ -12,7 +12,7 @@ import org.springframework.web.multipart.MultipartFile;
 @NoArgsConstructor
 @AllArgsConstructor
 public class BoardResponseDTO {
-    private int postId;
+    private Long postId;
     private String title;
     private String content;
     private Board.Category category;

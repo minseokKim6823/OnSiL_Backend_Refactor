@@ -64,6 +64,14 @@ public class BoardController {
         return new ResponseEntity<>(boardResponseDtoList, HttpStatus.OK);
     }
 
+
+    @GetMapping("/search/{boardId}")
+    @Operation(summary = "글 아이디로 조회 / 재영")
+    public ResponseEntity<BoardResponseDTO> showDetail(@PathVariable String boardId) {
+        BoardResponseDTO boardResponseDTO = boardService.findByBoardId(Long.parseLong(boardId));
+        return new ResponseEntity<>(boardResponseDTO, HttpStatus.OK);
+    }
+
     @GetMapping("/recommend/list")
     @Operation(summary = "추천기준 검색 / 재영")
     public ResponseEntity<List<BoardResponseDTO>> boardrecommendList(
@@ -74,18 +82,6 @@ public class BoardController {
         List<BoardResponseDTO> popularBoardResponseList = popularBoardResponsePage.getContent();
         return ResponseEntity.ok().body(popularBoardResponseList);
     }
-
-//    @PostMapping("/recommend/up/{boardId}")
-//    public ResponseEntity<String> increaseRecommend(@PathVariable int boardId) {
-//        boardService.increaseRecommend(boardId);
-//        return ResponseEntity.ok("추천 증가 성공");
-//    }
-//
-//    @PostMapping("/recommend/down/{boardId}")
-//    public ResponseEntity<String> decreaseRecommend(@PathVariable int boardId) {
-//        boardService.decreaseRecommend(boardId);
-//        return ResponseEntity.ok("추천 감소 성공");
-//    }
 
     @PostMapping("/recommend/up/{boardId}")
     @Operation(summary = "추천업 / 재영")

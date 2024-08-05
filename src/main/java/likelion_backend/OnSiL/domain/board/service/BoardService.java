@@ -104,6 +104,31 @@ public class BoardService {
         }
         return boardResponseDtoList;
     }
+    @Transactional
+    public List<BoardResponseDTO> searchById(Integer postId) {
+        Optional<Board> optionalBoardEntity = boardRepository.findById(Long.valueOf(postId));
+        List<BoardResponseDTO> boardResponseDtoList = new ArrayList<>();
+
+        if (optionalBoardEntity.isPresent()) {
+            Board board = optionalBoardEntity.get();
+            boardResponseDtoList.add(BoardResponseDTO.fromEntity(board));
+        } else {
+             throw new EntityNotFoundException("Board with id " + postId + " not found.");
+        }
+
+        return boardResponseDtoList;
+    }
+
+    @Transactional
+    public BoardResponseDTO findByBoardId(Long boardId) {
+        Optional<Board> boardEntityOptional = boardRepository.findById(boardId);
+        if (boardEntityOptional.isPresent()) {
+            BoardResponseDTO boardResponseDto = BoardResponseDTO.fromEntity(boardEntityOptional.get());
+            return boardResponseDto;
+        } else {
+            return null; // 또는 다른 상태 코드를 사용
+        }
+    }
     public Page<Board> boardrecommendList(Pageable pageable) {
         return boardRepository.findByBoardRecommendPost(pageable);
     }
@@ -152,4 +177,6 @@ public class BoardService {
     public Page<Board> getAllBoards(Pageable pageable) {
         return boardRepository.findAll(pageable);
     }
+
+
 }

@@ -119,7 +119,7 @@ class OnSiLApplicationTests {
 	@Transactional
 	void testSearchAllBoards() throws JsonProcessingException {
 		// Test case when title is not provided (should return all boards)
-		ResponseEntity<List<BoardResponseDTO>> response = boardController.search(null);
+		ResponseEntity<List<BoardResponseDTO>> response = boardController.search((String) null);
 
 		List<BoardResponseDTO> boardList = response.getBody();
 

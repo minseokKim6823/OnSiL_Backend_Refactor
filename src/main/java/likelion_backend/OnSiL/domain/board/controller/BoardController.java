@@ -32,17 +32,16 @@ public class BoardController {
 
     @PostMapping("/write")
     @Operation(summary = "글작성 / 재영")
-    public ResponseEntity<String> save(
-            @RequestBody BoardRequestDTO boardDto) {
+    public ResponseEntity<String> save(@RequestBody BoardRequestDTO boardDto) {
         boardService.save(boardDto);
         return ResponseEntity.ok("저장 성공");
     }
 
     @PutMapping("/update/{boardId}")
     @Operation(summary = "글수정 / 재영")
-    public ResponseEntity<String> update(@RequestBody String boardData, @PathVariable int boardId,@RequestParam(value = "image", required = false) MultipartFile imageFile) throws JsonProcessingException {
+    public ResponseEntity<String> update(@RequestBody String boardData, @PathVariable int boardId, @RequestParam(value = "image", required = false) MultipartFile imageFile) throws JsonProcessingException {
         try {
-            boardService.saveUpdate(boardData, boardId,imageFile);
+            boardService.saveUpdate(boardData, boardId, imageFile);
             return ResponseEntity.ok("수정 성공");
         } catch (EntityNotFoundException | IOException e) {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body(e.getMessage());
@@ -58,12 +57,10 @@ public class BoardController {
 
     @GetMapping("/search/all")
     @Operation(summary = "글 검색 / 재영")
-    public ResponseEntity<List<BoardResponseDTO>> search(@RequestParam(required = false) String title)
-            throws JsonProcessingException {
+    public ResponseEntity<List<BoardResponseDTO>> search(@RequestParam(required = false) String title) throws JsonProcessingException {
         List<BoardResponseDTO> boardResponseDtoList = boardService.search(title);
         return new ResponseEntity<>(boardResponseDtoList, HttpStatus.OK);
     }
-
 
     @GetMapping("/search/{boardId}")
     @Operation(summary = "글 아이디로 조회 / 재영")
@@ -74,11 +71,8 @@ public class BoardController {
 
     @GetMapping("/recommend/list")
     @Operation(summary = "추천기준 검색 / 재영")
-    public ResponseEntity<List<BoardResponseDTO>> boardrecommendList(
-            @PageableDefault(page = 0, size = 7, sort = "id", direction = Sort.Direction.DESC) Pageable pageable) {
-
+    public ResponseEntity<List<BoardResponseDTO>> boardrecommendList(@PageableDefault(page = 0, size = 7, sort = "recommend", direction = Sort.Direction.DESC) Pageable pageable) {
         Page<BoardResponseDTO> popularBoardResponsePage = boardService.boardrecommendList(pageable).map(BoardResponseDTO::fromEntity);
-
         List<BoardResponseDTO> popularBoardResponseList = popularBoardResponsePage.getContent();
         return ResponseEntity.ok().body(popularBoardResponseList);
     }
@@ -94,7 +88,6 @@ public class BoardController {
         if (boardService.hasUserRecommended(boardId, currentUserEmail)) {
             return ResponseEntity.status(HttpStatus.FORBIDDEN).body("이미 추천한 게시물입니다.");
         }
-
         boardService.increaseRecommend(boardId, currentUserEmail);
         return ResponseEntity.ok("추천 증가 성공");
     }
@@ -110,18 +103,15 @@ public class BoardController {
         if (!boardService.hasUserRecommended(boardId, currentUserEmail)) {
             return ResponseEntity.status(HttpStatus.FORBIDDEN).body("추천하지 않은 게시물입니다.");
         }
-
         boardService.decreaseRecommend(boardId, currentUserEmail);
         return ResponseEntity.ok("추천 감소 성공");
     }
 
     @GetMapping("/list")
     @Operation(summary = "전체 게시글 조회")
-    public ResponseEntity<Page<BoardResponseDTO>> getAllBoards(
-            @PageableDefault(page = 0, size = 10, sort = "postId", direction = Sort.Direction.DESC) Pageable pageable) {
+    public ResponseEntity<Page<BoardResponseDTO>> getAllBoards(@PageableDefault(page = 0, size = 10, sort = "postId", direction = Sort.Direction.DESC) Pageable pageable) {
         Page<Board> boardPage = boardService.getAllBoards(pageable);
         Page<BoardResponseDTO> boardResponseDTOPage = boardPage.map(BoardResponseDTO::fromEntity);
         return ResponseEntity.ok(boardResponseDTOPage);
     }
-
 }

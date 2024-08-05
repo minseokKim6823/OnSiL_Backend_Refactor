@@ -1,6 +1,7 @@
 package likelion_backend.OnSiL.domain.board.entity;
 
 import jakarta.persistence.*;
+import likelion_backend.OnSiL.domain.member.entity.Member;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -31,14 +32,15 @@ public class Board {
     @Column(name = "image")
     private String image;
 
-    @Column(name = "writer")
-    private String writer;
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "writer_id")
+    private Member writer;  // 작성자 정보를 Member 객체로 변경
 
     @OneToMany(mappedBy = "board", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<Recommendation> recommendations;
 
     public enum Category {
-        SAN, //산책
+        SAN, // 산책
         JIL, // 질병
         CHIN // 커뮤니티
     }

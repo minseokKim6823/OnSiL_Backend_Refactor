@@ -33,7 +33,7 @@ public class HealthNewsService {
         int display = 100;
         int start = 1;
 
-        while (allNews.size() < 300) {
+        while (start <= 2000) {  // 최대 1300개의 데이터를 가져오도록 설정
             NewsApiResponseDto newsApiResponse = newsApiResponseRepository.getNewsApiResponseDto(keyword, display, start)
                     .orElseThrow(() -> new NewsNullException("No news found for keyword: " + keyword));
 
@@ -46,10 +46,11 @@ public class HealthNewsService {
             start += display;
 
             if (filteredNewsList.size() < display) {
-                break; // No more news items available
+                break; // 더 이상 뉴스 항목이 없으면 종료
             }
         }
 
+        // 필터링된 뉴스 리스트 중에서 7개 미만의 뉴스만 가져오도록 설정
         List<HealthNewsResponseDto> responseDtos = allNews.stream()
                 .map(news -> {
                     HealthNewsResponseDto responseDto = news.toHealthNewsResponseDto(jsoupCrawling);
@@ -57,6 +58,7 @@ public class HealthNewsService {
                     return responseDto;
                 })
                 .filter(HealthNewsResponseDto::validateImageLink)
+                .limit(4)  // 최대 4개의 뉴스만 가져오도록 제한
                 .collect(Collectors.toList());
 
         saveHealthNewsList(responseDtos, keyword);

@@ -9,5 +9,6 @@ import java.util.Optional;
 
 public interface LikeRepository extends JpaRepository<Like, Long> {
     Optional<Like> findByBoardAndMember(Board board, Member member);
+    boolean existsByBoardAndMember(Board board, Member member);
     void deleteById(Long id); // like_id로 삭제하기 위해 메서드 추가
 }

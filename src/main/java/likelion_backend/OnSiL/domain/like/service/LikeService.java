@@ -2,6 +2,7 @@ package likelion_backend.OnSiL.domain.like.service;
 
 import likelion_backend.OnSiL.domain.board.entity.Board;
 import likelion_backend.OnSiL.domain.board.repository.BoardRepository;
+import likelion_backend.OnSiL.domain.board.service.BoardService;
 import likelion_backend.OnSiL.domain.like.entity.Like;
 import likelion_backend.OnSiL.domain.like.repository.LikeRepository;
 import likelion_backend.OnSiL.domain.member.entity.Member;
@@ -19,6 +20,9 @@ public class LikeService {
 
     @Autowired
     private BoardRepository boardRepository;
+
+    @Autowired
+    private BoardService boardService;
 
     @Autowired
     private MemberJpaRepository memberRepository;
@@ -39,6 +43,8 @@ public class LikeService {
         like.setBoard(board);
         like.setMember(member);
         likeRepository.save(like);
+
+        boardService.increaseRecommend(postId, memberId);  // 추천수 증가
     }
 
     @Transactional
@@ -51,5 +57,7 @@ public class LikeService {
         Like like = likeRepository.findByBoardAndMember(board, member)
                 .orElseThrow(() -> new CustomException("Like not found"));
         likeRepository.delete(like);
+
+        boardService.decreaseRecommend(postId, username);  // 추천수 감소
     }
 }

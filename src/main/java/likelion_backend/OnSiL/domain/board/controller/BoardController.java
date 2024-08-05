@@ -64,6 +64,14 @@ public class BoardController {
         return new ResponseEntity<>(boardResponseDtoList, HttpStatus.OK);
     }
 
+
+    @GetMapping("/search/{boardId}")
+    @Operation(summary = "글 아이디로 조회 / 재영")
+    public ResponseEntity<BoardResponseDTO> showDetail(@PathVariable String boardId) {
+        BoardResponseDTO boardResponseDTO = boardService.findByBoardId(Long.parseLong(boardId));
+        return new ResponseEntity<>(boardResponseDTO, HttpStatus.OK);
+    }
+
     @GetMapping("/recommend/list")
     @Operation(summary = "추천기준 검색 / 재영")
     public ResponseEntity<List<BoardResponseDTO>> boardrecommendList(

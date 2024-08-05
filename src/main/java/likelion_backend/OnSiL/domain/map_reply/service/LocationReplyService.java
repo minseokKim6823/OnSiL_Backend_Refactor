@@ -41,6 +41,7 @@ public class LocationReplyService {
         String memberNickname = member.map(Member::getNickname).orElse("anonymousWriter");
         locationReply.setWriter(memberNickname);
 
+
         Optional<Location> locationOpt = locationRepository.findById(locationReplyDto.getLocationId());
         if (locationOpt.isPresent()) {
             Location location = locationOpt.get();
@@ -57,6 +58,7 @@ public class LocationReplyService {
 
     private LocationReplyDto convertToDTO(LocationReply locationReply) {
         LocationReplyDto locationReplyDto = new LocationReplyDto();
+        locationReplyDto.setId(locationReply.getId());
         locationReplyDto.setWriter(locationReply.getWriter());
         locationReplyDto.setContent(locationReply.getContent());
         locationReplyDto.setLocationId(locationReply.getLocation().getId());
@@ -66,6 +68,8 @@ public class LocationReplyService {
 
     private LocationReply convertToEntity(LocationReplyDto locationReplyDto){
         LocationReply locationReply = new LocationReply();
+        locationReply.setId(locationReplyDto.getId());
+        locationReply.setWriter(locationReplyDto.getWriter());
         locationReply.setWriter(locationReplyDto.getWriter());
         locationReply.setContent(locationReplyDto.getContent());
 

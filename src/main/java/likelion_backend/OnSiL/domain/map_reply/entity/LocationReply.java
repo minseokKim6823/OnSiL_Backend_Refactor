@@ -12,7 +12,7 @@ import lombok.Setter;
 
 public class LocationReply {
     @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(length = 11)
     private Long id;
     @Column(length = 30)

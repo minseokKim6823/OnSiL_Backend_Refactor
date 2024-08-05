@@ -7,6 +7,7 @@ import lombok.Setter;
 @Setter
 @Getter
 public class LocationReplyDto {
+    private Long id;
     private String writer;
     private String content;
     private Long locationId;

@@ -11,9 +11,7 @@ import java.util.List;
 @Setter
 public class Board {
     @Id
-
     @GeneratedValue(strategy = GenerationType.AUTO)
-
     @Column(name = "post_id")
     private long postId;
 

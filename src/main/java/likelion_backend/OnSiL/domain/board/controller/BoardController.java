@@ -75,18 +75,6 @@ public class BoardController {
         return ResponseEntity.ok().body(popularBoardResponseList);
     }
 
-//    @PostMapping("/recommend/up/{boardId}")
-//    public ResponseEntity<String> increaseRecommend(@PathVariable int boardId) {
-//        boardService.increaseRecommend(boardId);
-//        return ResponseEntity.ok("추천 증가 성공");
-//    }
-//
-//    @PostMapping("/recommend/down/{boardId}")
-//    public ResponseEntity<String> decreaseRecommend(@PathVariable int boardId) {
-//        boardService.decreaseRecommend(boardId);
-//        return ResponseEntity.ok("추천 감소 성공");
-//    }
-
     @PostMapping("/recommend/up/{boardId}")
     @Operation(summary = "추천업 / 재영")
     public ResponseEntity<String> increaseRecommend(@PathVariable int boardId) {

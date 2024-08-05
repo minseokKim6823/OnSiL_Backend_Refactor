@@ -13,7 +13,7 @@ import java.util.List;
 @Table(name="walk_route")
 public class Location {
     @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(length = 11)
     private Long id;
     @Column(length = 30)

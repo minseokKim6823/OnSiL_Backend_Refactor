@@ -45,7 +45,11 @@ public class LocationService {
         String memberNickname = member.map(Member::getNickname).orElse("anonymousWriter");
         location.setWriter(memberNickname);
         System.out.println(memberNickname);
-        return convertToDTO(locationJpaRepository.save(location));
+        Location savedLocation = locationJpaRepository.save(location);
+
+        // 반환된 엔티티에서 ID 값을 가져와 DTO에 설정
+        locationDto.setId(savedLocation.getId());
+        return convertToDTO(savedLocation);
     }
 
     public void deleteById(Long id) {
@@ -85,6 +89,7 @@ public class LocationService {
 
     private LocationDto convertToDTO(Location location) {
         LocationDto locationDto = new LocationDto();
+        locationDto.setId(location.getId());
         locationDto.setWriter(location.getWriter());
         locationDto.setContent(location.getContent());
         locationDto.setTitle(location.getTitle());
@@ -98,6 +103,7 @@ public class LocationService {
     }
     private Location convertToEntity(LocationDto locationDto){
         Location location =new Location();
+        location.setId(locationDto.getId());
         location.setWriter(locationDto.getWriter());
         location.setTitle(locationDto.getTitle());
         location.setContent(locationDto.getContent());

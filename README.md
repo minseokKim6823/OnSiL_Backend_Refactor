@@ -24,7 +24,8 @@
 
 ### 02_ 논리적 모델링
 
-![image](https://github.com/3-Minutes-Query/1st_project/assets/93479041/63d9142a-d5e4-4c4f-afd4-cd5ec5ca51c0)
+![image](https://github.com/user-attachments/assets/2df112c3-79a4-49c9-9323-61ad7d62df6f)
+
 
 
 ### 03_ 물리적 모델링

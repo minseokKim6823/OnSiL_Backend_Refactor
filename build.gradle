@@ -24,21 +24,50 @@ repositories {
 }
 
 dependencies {
+	implementation 'org.springframework.boot:spring-boot-starter-data-jpa'
+	implementation 'org.springframework.boot:spring-boot-starter-web'
+	implementation 'org.projectlombok:lombok:1.18.24'
+	runtimeOnly 'com.mysql:mysql-connector-j'
 	// mariadb 세팅
 	implementation 'org.mariadb.jdbc:mariadb-java-client:2.7.4'
+
 	runtimeOnly 'org.mariadb.jdbc:mariadb-java-client'
 	//swagger
 	implementation 'org.springdoc:springdoc-openapi-starter-webmvc-ui:2.1.0'
 
+	//AWS 관리
+	implementation 'org.springframework.cloud:spring-cloud-starter-aws:2.2.6.RELEASE'
+
+	implementation 'com.querydsl:querydsl-jpa:4.4.0'
+
+	implementation 'org.jsoup:jsoup:1.14.3'
 	implementation 'org.springframework.boot:spring-boot-starter-data-jpa'
 	implementation 'org.springframework.boot:spring-boot-starter-oauth2-client'
 	implementation 'org.springframework.boot:spring-boot-starter-security'
 	implementation 'org.springframework.boot:spring-boot-starter-web'
+	implementation 'org.springframework.boot:spring-boot-starter-validation'
 	compileOnly 'org.projectlombok:lombok'
 	annotationProcessor 'org.projectlombok:lombok'
 	testImplementation 'org.springframework.boot:spring-boot-starter-test'
 	testImplementation 'org.springframework.security:spring-security-test'
 	testRuntimeOnly 'org.junit.platform:junit-platform-launcher'
+
+	annotationProcessor 'org.projectlombok:lombok:1.18.24'
+
+
+	//jwt
+	runtimeOnly 'io.jsonwebtoken:jjwt-jackson:0.11.2'
+	runtimeOnly 'io.jsonwebtoken:jjwt-impl:0.11.2'
+	compileOnly 'io.jsonwebtoken:jjwt-api:0.11.2'
+
+	//redis
+//	implementation 'org.springframework.boot:spring-boot-starter-data-redis'
+
+	//email
+	implementation 'javax.mail:mail:1.4.7'
+	implementation group: 'org.springframework.boot', name: 'spring-boot-starter-mail', version: '2.6.3'
+
+	implementation 'org.springframework:spring-context-support:5.3.9'
 }
 
 tasks.named('test') {
